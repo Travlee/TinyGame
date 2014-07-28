@@ -10,6 +10,7 @@ TinyGame.World.prototype._Update = function(){
 
 	this._Physics();
 	if(this.EnableBounds) this._BoundsCheck();
+	// call object's update method if exists
 	
 };
 //	Update Object positions and Gravity and such...

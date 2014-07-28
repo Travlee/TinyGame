@@ -8,11 +8,13 @@ TinyGame.Time = function(){
 	this._LastCheck = 0;
 
 	//	Public:
+	this.Current = 0;
 	this.Delta = 0;
 	this.Seconds = 0;
 	this.FPS = 0;
 };
 TinyGame.Time.prototype._Update = function(time){
+	this.Current = time;
 	this.Delta = time - this._Last || 0;
 	this.Seconds = Math.floor(time / 1000);
 	this._FPS(time);

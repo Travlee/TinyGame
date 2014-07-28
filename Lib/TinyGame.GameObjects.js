@@ -64,34 +64,60 @@ TinyGame.ObjectFactory.prototype.Rect = function(x, y, width, height, color){
 //			- Width:/Height: Frame
 //		- Width/Height scale for the image
 TinyGame.ObjectFactory.prototype.Sprite = function(image, x, y, width, height, clip){
+	
+	function Animation(img, start_x, start_y, frame_width, frame_height, frames, speed){
+		this._Image = img;
+		this._StartX = start_x;
+		this._StartY = start_y;
+		this._FrameWidth = frame_width;
+		this._FrameHeight = frame_height;
+		this._Speed = speed || 150;
+		this._CurrentFrame = 1;
+		this._TotalFrames = frames;
+		this._LastFrame = 0;
+	}
+	Animation.prototype._Draw = function(context, x, y, width, height){
+		var frameX, frameY;
+		frameX = this._StartX + (this._FrameWidth * (this._CurrentFrame - 1));
+		frameY = this._StartY;
+		context.drawImage(this._Image, frameX, frameY, this._FrameWidth, this._FrameHeight, 
+							x, y, width, height);
+		if(game.Time.Current > this._LastFrame + this._Speed){
+			this._LastFrame = game.Time.Current;
 
-	function Sprite(image, x, y, width, height, clip){
+			if(this._CurrentFrame < this._TotalFrames) this._CurrentFrame++;
+			else this._CurrentFrame = 1;
+		}
+	};
+	function Sprite(img, x, y, width, height, clip){
 		TinyGame.GameObject.call(this, x, y);
 		this._Type = "SPRITE";
-		this._Image = image || "";
+		this._Image = img || "";
 		this.Width = width || 0;
 		this.Height = height || 0;
 		if(!clip && typeof clip !== 'object'){ this._StaticFrame = null;}
 		else{
 			this._StaticFrame = { X: clip.x, Y: clip.y, Width: clip.width, Height: clip.height};
 		}
-		this._State = "STATIC";	// Used for animations
+		// Animations
+		this._Animations = [];
+		this._Playing = false;
 	}	
 	Sprite.prototype = Object.create(TinyGame.GameObject.prototype);
-	Sprite.prototype.Animations = {
-		_Animations: [],
-		Add: function(title, clip){
-			this._Animations[title] = clip;
-		},
-		Play: function(title){
-			console.log(this._Animations[title]);
-		},
-		Pause: function(){
-
+	Sprite.prototype.Add = function(title, animation, speed){
+		this._Animations[title] = new Animation(this._Image, animation.x, animation.y, animation.width, animation.height,
+												animation.frames, animation.speed);
+	};
+	Sprite.prototype.Play = function(title){
+		if(this._Animations[title]){
+			this._Playing = title;
 		}
 	};
+	Sprite.prototype.Stop = function(){
+		this._Playing = false;
+	};
 	Sprite.prototype._Draw = function(context){
-		if(this._State === 'STATIC'){
+		if(!this._Playing){
 			if(!this._StaticFrame){
 				context.drawImage(this._Image, this.Position.X, this.Position.Y, this.Width, this.Height);
 			}
@@ -100,7 +126,7 @@ TinyGame.ObjectFactory.prototype.Sprite = function(image, x, y, width, height, c
 			}
 		}
 		else{
-				
+			this._Animations[this._Playing]._Draw(context, this.Position.X, this.Position.Y, this.Width, this.Height);
 		}	
 	};
 

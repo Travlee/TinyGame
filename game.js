@@ -29,9 +29,10 @@ test.Main = {
 
 		blockText = this.Add.Text(block.Position.X, block.Position.Y, block.Distance(ninja), '10pt', "blue");
 
-		ninja.Animations.Add("walk_right", {x:0, y:0, width:88, height:88, frames:5});
+		ninja.Add("walk_right", {x:0, y:0, width:88, height:88, frames:5, speed: 125});
+		ninja.Add("Die", {x:88, y:264, width:88, height:88, frames:1});
 
-		ninja.Animations.Play("walk_right");
+		ninja.Play("walk_right");
 	},
 	Update: function(){
 
@@ -47,15 +48,16 @@ test.Main = {
 	// Block logic goes here
 	BlockLogic: function(){
 		target = new TinyGame.Vector2d();
-		target.X = ninja.Position.X - block.Position.X;
-		target.Y = ninja.Position.Y - block.Position.Y;
+		target.X = (ninja.Position.X + ninja.Velocity.X) - block.Position.X;
+		target.Y = (ninja.Position.Y + ninja.Velocity.Y) - block.Position.Y;
 
 		var norm = target.Normalize();
 
 		if(block.Distance(ninja) > 1){
-			block.Velocity = norm;
+			block.Velocity = norm;				
 		}
 		else{
+			ninja.Play("Die");
 			block.Velocity.X = 0;
 			block.Velocity.Y = 0;
 		}
