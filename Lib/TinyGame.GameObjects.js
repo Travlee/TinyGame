@@ -56,83 +56,104 @@ TinyGame.ObjectFactory.prototype.Rect = function(x, y, width, height, color){
 	return obj;
 };
 
-//	Sprite Object()
-//		- Image title from cache
-//		- X/Y position
-//		Sprite Clip Object
-//			- X:/Y: clip start
-//			- Width:/Height: Frame
-//		- Width/Height scale for the image
+//	Sprite()
 TinyGame.ObjectFactory.prototype.Sprite = function(image, x, y, width, height, clip){
 	
-	function Animation(img, animation, repeat){
-		this._Image = img;
+	function Animation(animation){
 		this._StartX = animation.x;
 		this._StartY = animation.y;
 		this._FrameWidth = animation.width;
 		this._FrameHeight = animation.height;
 		this._Speed = animation.speed || 150;
-		this._Repeat = (repeat === false)?false:true;
-		this._CurrentFrame = 1;
-		this._TotalFrames = animation.frames;
-		this._LastFrameTime = 0;
+		this._Frames = animation.frames;
+		this._Repeat = animation.repeat;
+		//	add code for vertical/horizontal sheets
+		this._RowFrames = true;	
+		if(typeof animation.repeat === "boolean") this._Repeat = animation.repeat;
+		else this._Repeat = true;
 	}
-	Animation.prototype._Draw = function(context, x, y, width, height){
-		var frameX, frameY;
-		frameX = this._StartX + (this._FrameWidth * (this._CurrentFrame - 1));
-		frameY = this._StartY;
-		context.drawImage(this._Image, frameX, frameY, this._FrameWidth, this._FrameHeight, 
-							x, y, width, height);
-		if(game.Time.Current > this._LastFrameTime + this._Speed){
-			this._LastFrameTime = game.Time.Current;
-
-			if(this._CurrentFrame < this._TotalFrames){
-				this._CurrentFrame++;
-			}
-			else{ 
-				if(this._Repeat) this._CurrentFrame = 1;
-			}
-			
-		}
-	};
-	function Sprite(img, x, y, width, height, clip){
+	function Sprite(img, x, y, width, height, sprite){
 		TinyGame.GameObject.call(this, x, y);
 		this._Type = "SPRITE";
 		this._Image = img || "";
 		this.Width = width || 0;
 		this.Height = height || 0;
-		if(!clip && typeof clip !== 'object'){ this._StaticFrame = null;}
-		else{
-			this._StaticFrame = { X: clip.x, Y: clip.y, Width: clip.width, Height: clip.height};
-		}
+		
 		// Animations
 		this._Animations = [];
-		this._Playing = false;
+
+		this.Active = {
+			Stopped:false,
+			Animation:null,
+			X:0,
+			Y:0,
+			StartX:0,
+			StartY:0,
+			Width:0,
+			Height:0,
+			Frames:0,
+			Repeat:0,
+			Speed:0,
+			_CurrentFrame:0,
+			_LastFrameTime:0
+		};
+
+		if(sprite && typeof sprite === 'object'){ 
+			this.Add("Default", sprite);
+		}
+		else{
+			this.Add("Default", {x:0, y:0, width:this.Width, height:this.Height, frames:1, repeat:false});
+		}
+		this.Play("Default");
 	}	
 	Sprite.prototype = Object.create(TinyGame.GameObject.prototype);
-	Sprite.prototype.Add = function(title, animation, repeat){
-		this._Animations[title] = new Animation(this._Image, animation, repeat);
+	Sprite.prototype.Add = function(title, animation){
+		this._Animations[title] = new Animation(animation);
 	};
 	Sprite.prototype.Play = function(title){
-		if(this._Animations[title]){
-			this._Playing = title;
+		if(this._Animations[title] && this.Active.Animation !== title){
+			this.Active.Stopped = false;
+			this.Active.Animation = title;
+			this.Active._CurrentFrame = 1;
+			this.Active._LastFrameTime = 0;
+
+			var animation = this._Animations[title];
+			this.Active.X = animation._StartX;
+			this.Active.Y = animation._StartY;
+			this.Active.StartX = animation._StartX;
+			this.Active.StartY = animation._StartY;
+			this.Active.Width = animation._FrameWidth;
+			this.Active.Height = animation._FrameHeight;
+			this.Active.Frames = animation._Frames;
+			this.Active.Repeat = animation._Repeat;
+			this.Active.Speed = animation._Speed;
 		}
 	};
 	Sprite.prototype.Stop = function(){
-		this._Playing = false;
+		this.Active.Stopped = true;
 	};
-	Sprite.prototype._Draw = function(context){
-		if(!this._Playing){
-			if(!this._StaticFrame){
-				context.drawImage(this._Image, this.Position.X, this.Position.Y, this.Width, this.Height);
-			}
-			else{
-				context.drawImage(this._Image, this._StaticFrame.X, this._StaticFrame.Y, this._StaticFrame.Width, this._StaticFrame.Height, this.Position.X, this.Position.Y, this.Width, this.Height);			
+	Sprite.prototype._Draw = function(context, time){
+		if(!this.Active.Stopped && this.Active.Frames !== 1){
+			if(this.Active._LastFrameTime === 0) this.Active._LastFrameTime = time;
+			if(time > this.Active._LastFrameTime + this.Active.Speed){
+				this.Active._LastFrameTime = time;
+
+				if(this.Active._CurrentFrame < this.Active.Frames){					
+					this.Active.X += this.Active.Width;
+					this.Active._CurrentFrame++;
+				}
+				else{
+					if(this.Active.Repeat) {
+						this.Active._CurrentFrame = 1;
+						this.Active.X = this.Active.StartX;
+					}
+					else{
+						this.Stop();
+					}					
+				}
 			}
 		}
-		else{
-			this._Animations[this._Playing]._Draw(context, this.Position.X, this.Position.Y, this.Width, this.Height);
-		}	
+		context.drawImage(this._Image, this.Active.X, this.Active.Y, this.Active.Width, this.Active.Height, this.Position.X, this.Position.Y, this.Width, this.Height);
 	};
 
 	// Create Object

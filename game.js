@@ -18,26 +18,25 @@ test.Main = {
 
 		game.World.EnableBounds = true;
 
-	 	block = game.Add.Rect(740, 3, 50, 50, 'green');
+	 	block = game.Add.Rect(720, 20, 50, 50, 'green');
 	 	// block.Velocity.X = 1;
 	 	// block.Velocity.Y = 1;
 		// block.Gravity.Y = .1;
 
-		ninja = game.Add.Sprite('Ninja', 50, 50, 88, 88, {x:0, y:0, width:88, height:88});
+		ninja = game.Add.Sprite('Ninja', 50, 350, 88, 88, {x:0, y:0, width:88, height:88, frames:1});
 		ninja.Gravity.Y = .6;
-		ninja.Velocity.X = 1.5;
+		ninja.Velocity.X = 1;
 
 		blockText = this.Add.Text(block.Position.X, block.Position.Y, block.Distance(ninja), '10pt', "blue");
 
-		ninja.Add("walk_right", {x:0, y:0, width:88, height:88, frames:5, speed:125});
-		ninja.Add("Die", {x:0, y:264, width:88, height:88, frames:2}, false);
+		ninja.Add("walk_right", {x:0, y:0, width:88, height:88, frames:5, speed:75});
+		ninja.Add("Die", {x:0, y:264, width:88, height:88, frames:2, repeat:false, speed:150});
 
 		ninja.Play("walk_right");
 	},
 	Update: function(){
 
 		test.Main.BlockLogic();
-		test.Main.NinjaLogic();
 
 		blockText.Position.X = block.Position.X;
 		blockText.Position.Y = block.Position.Y - 1;
@@ -46,24 +45,27 @@ test.Main = {
 		//	Debugs stuff OBVIOUSLY
 		test.Main.DebugText();
 	},
-	NinjaLogic: function(){
-		// ninja.Play("walk_right");
+	NinjaDie: function(){
+		ninja.Play("Die");
+		ninja.Velocity.X = 0;
 	},
 	// Block logic goes here
 	BlockLogic: function(){
 		target = new TinyGame.Vector2d();
-		target.X = (ninja.Position.X + ninja.Velocity.X) - block.Position.X;
-		target.Y = (ninja.Position.Y + ninja.Velocity.Y) - block.Position.Y;
+		target.X = ninja.Position.X - block.Position.X;
+		target.Y = ninja.Position.Y - block.Position.Y;
 
 		var norm = target.Normalize();
+		var distance = block.Distance(ninja);
 
-		if(block.Distance(ninja) > 1){
+		
+		if(distance > 1){
 			block.Velocity = norm;				
 		}
 		else{
-			ninja.Play("Die");
 			block.Velocity.X = 0;
 			block.Velocity.Y = 0;
+			test.Main.NinjaDie();
 		}
 	},
 
@@ -74,8 +76,6 @@ test.Main = {
 		output.innerHTML = "DeltaTime: " + game.Time.Delta;
 		output.innerHTML += "<br />FPS: " + game.Time.FPS;
 		output.innerHTML += "<br />objects: " + game.Objects.Count();
-		output.innerHTML += "<br />NINJA - BLOCK: " + block.Distance(ninja);
-		output.innerHTML += "<br />BLOCK to NINJA: (x: " + Math.round(target.X) + ", y: " + Math.round(target.Y) + ")";
 	}
 };
 

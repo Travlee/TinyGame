@@ -24,7 +24,7 @@ TinyGame.Scene.prototype._Update = function(){
 		//	Check if object is off-canvas before drawing..
 		// if(){ };
 
-		this._Game.Objects._Objects[i]._Draw(this.Context);
+		this._Game.Objects._Objects[i]._Draw(this.Context, this._Game.Time.Current);
 	};	
 };
 TinyGame.Scene.prototype._ClearScene = function(){
