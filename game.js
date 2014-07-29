@@ -25,18 +25,19 @@ test.Main = {
 
 		ninja = game.Add.Sprite('Ninja', 50, 50, 88, 88, {x:0, y:0, width:88, height:88});
 		ninja.Gravity.Y = .6;
-		ninja.Velocity.X = 1;
+		ninja.Velocity.X = 1.5;
 
 		blockText = this.Add.Text(block.Position.X, block.Position.Y, block.Distance(ninja), '10pt', "blue");
 
-		ninja.Add("walk_right", {x:0, y:0, width:88, height:88, frames:5, speed: 125});
-		ninja.Add("Die", {x:88, y:264, width:88, height:88, frames:1});
+		ninja.Add("walk_right", {x:0, y:0, width:88, height:88, frames:5, speed:125});
+		ninja.Add("Die", {x:0, y:264, width:88, height:88, frames:2}, false);
 
 		ninja.Play("walk_right");
 	},
 	Update: function(){
 
 		test.Main.BlockLogic();
+		test.Main.NinjaLogic();
 
 		blockText.Position.X = block.Position.X;
 		blockText.Position.Y = block.Position.Y - 1;
@@ -44,6 +45,9 @@ test.Main = {
 
 		//	Debugs stuff OBVIOUSLY
 		test.Main.DebugText();
+	},
+	NinjaLogic: function(){
+		// ninja.Play("walk_right");
 	},
 	// Block logic goes here
 	BlockLogic: function(){

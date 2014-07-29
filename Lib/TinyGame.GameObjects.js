@@ -65,16 +65,17 @@ TinyGame.ObjectFactory.prototype.Rect = function(x, y, width, height, color){
 //		- Width/Height scale for the image
 TinyGame.ObjectFactory.prototype.Sprite = function(image, x, y, width, height, clip){
 	
-	function Animation(img, start_x, start_y, frame_width, frame_height, frames, speed){
+	function Animation(img, animation, repeat){
 		this._Image = img;
-		this._StartX = start_x;
-		this._StartY = start_y;
-		this._FrameWidth = frame_width;
-		this._FrameHeight = frame_height;
-		this._Speed = speed || 150;
+		this._StartX = animation.x;
+		this._StartY = animation.y;
+		this._FrameWidth = animation.width;
+		this._FrameHeight = animation.height;
+		this._Speed = animation.speed || 150;
+		this._Repeat = (repeat === false)?false:true;
 		this._CurrentFrame = 1;
-		this._TotalFrames = frames;
-		this._LastFrame = 0;
+		this._TotalFrames = animation.frames;
+		this._LastFrameTime = 0;
 	}
 	Animation.prototype._Draw = function(context, x, y, width, height){
 		var frameX, frameY;
@@ -82,11 +83,16 @@ TinyGame.ObjectFactory.prototype.Sprite = function(image, x, y, width, height, c
 		frameY = this._StartY;
 		context.drawImage(this._Image, frameX, frameY, this._FrameWidth, this._FrameHeight, 
 							x, y, width, height);
-		if(game.Time.Current > this._LastFrame + this._Speed){
-			this._LastFrame = game.Time.Current;
+		if(game.Time.Current > this._LastFrameTime + this._Speed){
+			this._LastFrameTime = game.Time.Current;
 
-			if(this._CurrentFrame < this._TotalFrames) this._CurrentFrame++;
-			else this._CurrentFrame = 1;
+			if(this._CurrentFrame < this._TotalFrames){
+				this._CurrentFrame++;
+			}
+			else{ 
+				if(this._Repeat) this._CurrentFrame = 1;
+			}
+			
 		}
 	};
 	function Sprite(img, x, y, width, height, clip){
@@ -104,9 +110,8 @@ TinyGame.ObjectFactory.prototype.Sprite = function(image, x, y, width, height, c
 		this._Playing = false;
 	}	
 	Sprite.prototype = Object.create(TinyGame.GameObject.prototype);
-	Sprite.prototype.Add = function(title, animation, speed){
-		this._Animations[title] = new Animation(this._Image, animation.x, animation.y, animation.width, animation.height,
-												animation.frames, animation.speed);
+	Sprite.prototype.Add = function(title, animation, repeat){
+		this._Animations[title] = new Animation(this._Image, animation, repeat);
 	};
 	Sprite.prototype.Play = function(title){
 		if(this._Animations[title]){
