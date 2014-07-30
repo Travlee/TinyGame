@@ -25,6 +25,13 @@ TinyGame.Scene.prototype._Update = function(){
 		// if(){ };
 
 		this._Game.Objects._Objects[i]._Draw(this.Context, this._Game.Time.Current);
+	};
+	//	Draw Text	
+	for(var i=0, len=this._Game.Text._Objects.length; i<len; i++){
+		//	Check if object is off-canvas before drawing..
+		// if(){ };
+
+		this._Game.Text._Objects[i]._Draw(this.Context, this._Game.Time.Current);
 	};	
 };
 TinyGame.Scene.prototype._ClearScene = function(){

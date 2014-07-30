@@ -18,12 +18,6 @@ TinyGame.GameObject.prototype.Distance = function(obj){
 	return TinyGame.Math.Vectors.Distance(this, obj);
 };
 
-//	make this later!!!!
-TinyGame.TextObject = function(x, y){
-	// this.Position = new TinyGame.Vec2();
-};
-
-
 //	#TinyGame.ObjectFactory()
 //		-Makes objects/stores in Game.Objects/TinyGame.ObjectsHandler()
 TinyGame.ObjectFactory = function(game){
@@ -178,7 +172,7 @@ TinyGame.ObjectFactory.prototype.Text = function(x, y, text, size, color){
 		context.fillText(this.Text, this.Position.X, this.Position.Y);
 	};
 	var obj = new Text(x, y, text, size, color);
-	this._Game.Objects.Add(obj);
+	this._Game.Text.Add(obj);
 	return obj;
 };
 TinyGame.ObjectFactory.prototype.Image = function(){};
@@ -187,10 +181,17 @@ TinyGame.ObjectFactory.prototype.Circle = function(){};
 //	#TinyGame.ObjectsHandler()
 TinyGame.ObjectsHandler = function(){
 	this._Objects = [];
-	this._TextObjects = [];
 };
 TinyGame.ObjectsHandler.prototype.Add = function(obj){
 	this._Objects.push(obj);
+};
+TinyGame.ObjectsHandler.prototype.Remove = function(obj){
+	for(var i=0, len=this._Objects.length; i<len; i++){
+		if(this._Objects[i] === obj){
+			this._Objects.splice(i, 1);
+			return;
+		}
+	}		
 };
 TinyGame.ObjectsHandler.prototype.Clear = function(){
 	this._Objects = [];

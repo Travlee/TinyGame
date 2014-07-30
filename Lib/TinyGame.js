@@ -50,8 +50,9 @@ TinyGame.Game = function(width, height, parent_id, states, default_state){
 	this.Add = null;
 	this.Load = null;
 	this.Objects = null;
+	this.Text = null;
 	//this.Rand = null;
-	//this.Input = null; 
+	this.Input = null; 
 	this.Math = null;
 	this.Scene = new TinyGame.Scene(this, width, height, parent_id, 'white');
 	this.States = new TinyGame.StateHandler(this, states || null, default_state || null);
@@ -75,6 +76,7 @@ TinyGame.Game.prototype._Boot = function(){
 	this.Time = new TinyGame.Time();
 	this.Load = new TinyGame.Loader(this);
 	this.Objects = new TinyGame.ObjectsHandler(this);
+	this.Text = new TinyGame.ObjectsHandler(this);
 	this.Math = TinyGame.Math;
 	this.States._Boot();
 	this.Scene._Boot();
@@ -90,5 +92,5 @@ TinyGame.Game.prototype._Run = function(time){
 	this.Time._Update(time);
 	this.States._Update();
 	this.Scene._Update();
-	this.World._Update();
+	this.World._Update();	// call world before scene
 };

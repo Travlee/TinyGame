@@ -66,6 +66,8 @@ test.Main = {
 			block.Velocity.X = 0;
 			block.Velocity.Y = 0;
 			test.Main.NinjaDie();
+			game.Objects.Remove(block);
+			game.Text.Remove(blockText);
 		}
 	},
 
@@ -76,6 +78,7 @@ test.Main = {
 		output.innerHTML = "DeltaTime: " + game.Time.Delta;
 		output.innerHTML += "<br />FPS: " + game.Time.FPS;
 		output.innerHTML += "<br />objects: " + game.Objects.Count();
+		output.innerHTML += "<br />text objects: " + game.Text.Count();
 	}
 };
 
