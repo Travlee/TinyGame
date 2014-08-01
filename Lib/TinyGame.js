@@ -75,6 +75,7 @@ TinyGame.Game.prototype._Boot = function(){
 	this.Add = new TinyGame.ObjectFactory(this);
 	this.Time = new TinyGame.Time();
 	this.Load = new TinyGame.Loader(this);
+	this.Input = new TinyGame.Input(this);
 	this.Objects = new TinyGame.ObjectsHandler(this);
 	this.Text = new TinyGame.ObjectsHandler(this);
 	this.Math = TinyGame.Math;
@@ -91,6 +92,7 @@ TinyGame.Game.prototype._Run = function(time){
 	//	Game Loop Stuffs
 	this.Time._Update(time);
 	this.States._Update();
+	this.Input._Update();
 	this.Scene._Update();
 	this.World._Update();	// call world before scene
 };

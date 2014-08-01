@@ -19,20 +19,24 @@ TinyGame.Scene.prototype._Update = function(){
 	//	Clears Scene, DUH READ IT
 	this._ClearScene();
 
+	// Merges GameObjects and TextObjects
+	var objects = this._Game.Objects._Objects.concat(this._Game.Text._Objects);
+	
+	//	Sorts objects based on zIndex, higher last
+	objects.sort(function(a, b){return a.zIndex - b.zIndex;});
+
 	//	Draw objects
-	for(var i=0, len=this._Game.Objects._Objects.length; i<len; i++){
+	for(var i=0, len=objects.length; i<len; i++){
+		var obj = objects[i];
+		
 		//	Check if object is off-canvas before drawing..
-		// if(){ };
+		//	finish this later
+		//	also needs radius checks
+		if(obj.Position.X + obj.Width > this.Width || obj.Position.X < 0){ };
 
-		this._Game.Objects._Objects[i]._Draw(this.Context, this._Game.Time.Current);
+		//	Add Transforms for anchors later
+		obj._Draw(this.Context, this._Game.Time.Current);
 	};
-	//	Draw Text	
-	for(var i=0, len=this._Game.Text._Objects.length; i<len; i++){
-		//	Check if object is off-canvas before drawing..
-		// if(){ };
-
-		this._Game.Text._Objects[i]._Draw(this.Context, this._Game.Time.Current);
-	};	
 };
 TinyGame.Scene.prototype._ClearScene = function(){
 	this.Context.fillStyle = this.bgColor;

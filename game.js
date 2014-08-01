@@ -16,16 +16,14 @@ test.PreLoad = {
 test.Main = {
 	Initialize: function(){
 
-		game.World.EnableBounds = true;
-
 	 	block = game.Add.Rect(720, 20, 50, 50, 'green');
-	 	// block.Velocity.X = 1;
-	 	// block.Velocity.Y = 1;
-		// block.Gravity.Y = .1;
+		// block.Body.Gravity.Y = .1;
+		block.zIndex = 1;
 
-		ninja = game.Add.Sprite('Ninja', 50, 350, 88, 88, {x:0, y:0, width:88, height:88, frames:1});
-		ninja.Gravity.Y = .6;
-		ninja.Velocity.X = 1;
+		ninja = game.Add.Sprite('Ninja', 0, 0, 88, 88, {x:0, y:0, width:88, height:88, frames:1});
+		ninja.Body.Gravity.Y = .6;
+		ninja.Body.EnableBounds = true;
+		ninja.Body.Velocity.X = 1;
 
 		blockText = this.Add.Text(block.Position.X, block.Position.Y, block.Distance(ninja), '10pt', "blue");
 
@@ -47,7 +45,7 @@ test.Main = {
 	},
 	NinjaDie: function(){
 		ninja.Play("Die");
-		ninja.Velocity.X = 0;
+		ninja.Body.Velocity.X = 0;
 	},
 	// Block logic goes here
 	BlockLogic: function(){
@@ -60,11 +58,11 @@ test.Main = {
 
 		
 		if(distance > 1){
-			block.Velocity = norm;				
+			block.Body.Velocity = norm;				
 		}
 		else{
-			block.Velocity.X = 0;
-			block.Velocity.Y = 0;
+			block.Body.Velocity.X = 0;
+			block.Body.Velocity.Y = 0;
 			test.Main.NinjaDie();
 			game.Objects.Remove(block);
 			game.Text.Remove(blockText);
@@ -87,8 +85,4 @@ var game = new TinyGame.Game(800, 500, 'container', test, 'PreLoad');
 
 
 /*	Nonsense down here ##################################################################
-
-
-
-
 */

@@ -1,23 +1,3 @@
-//	#TinyGame.GameObject()
-//		-Base Object Class-ish
-TinyGame.GameObject = function(x, y){
-	this._Type = null;
-	this.Position = new TinyGame.Vector2d(x || 0, y || 0);
-	this.Velocity = new TinyGame.Vector2d(0, 0);
-	this.Gravity = new TinyGame.Vector2d(0, 0);
-
-	this.zIndex = 0;
-};
-TinyGame.GameObject.prototype._Draw = function(context){
-
-};
-TinyGame.GameObject.prototype._Update = function(){
-
-};
-TinyGame.GameObject.prototype.Distance = function(obj){
-	return TinyGame.Math.Vectors.Distance(this, obj);
-};
-
 //	#TinyGame.ObjectFactory()
 //		-Makes objects/stores in Game.Objects/TinyGame.ObjectsHandler()
 TinyGame.ObjectFactory = function(game){
@@ -45,12 +25,10 @@ TinyGame.ObjectFactory.prototype.Rect = function(x, y, width, height, color){
 	var obj = new Rect(x, y, width, height, color);
 	
 	//	Adds object to game
-	this._Game.Objects.Add(obj);
+	this._Game.Objects._Add(obj);
 
 	return obj;
 };
-
-//	Sprite()
 TinyGame.ObjectFactory.prototype.Sprite = function(image, x, y, width, height, clip){
 	
 	function Animation(animation){
@@ -62,7 +40,7 @@ TinyGame.ObjectFactory.prototype.Sprite = function(image, x, y, width, height, c
 		this._Frames = animation.frames;
 		this._Repeat = animation.repeat;
 		//	add code for vertical/horizontal sheets
-		this._RowFrames = true;	
+		// this._RowFrames = true;	
 		if(typeof animation.repeat === "boolean") this._Repeat = animation.repeat;
 		else this._Repeat = true;
 	}
@@ -153,7 +131,7 @@ TinyGame.ObjectFactory.prototype.Sprite = function(image, x, y, width, height, c
 	// Create Object
 	var obj = new Sprite(this._Game._Cache._Images[image], x, y, width, height, clip);
 	// Store it
-	this._Game.Objects.Add(obj);
+	this._Game.Objects._Add(obj);
 	// Return it
 	return obj;
 };
@@ -172,30 +150,8 @@ TinyGame.ObjectFactory.prototype.Text = function(x, y, text, size, color){
 		context.fillText(this.Text, this.Position.X, this.Position.Y);
 	};
 	var obj = new Text(x, y, text, size, color);
-	this._Game.Text.Add(obj);
+	this._Game.Text._Add(obj);
 	return obj;
 };
 TinyGame.ObjectFactory.prototype.Image = function(){};
 TinyGame.ObjectFactory.prototype.Circle = function(){};
-
-//	#TinyGame.ObjectsHandler()
-TinyGame.ObjectsHandler = function(){
-	this._Objects = [];
-};
-TinyGame.ObjectsHandler.prototype.Add = function(obj){
-	this._Objects.push(obj);
-};
-TinyGame.ObjectsHandler.prototype.Remove = function(obj){
-	for(var i=0, len=this._Objects.length; i<len; i++){
-		if(this._Objects[i] === obj){
-			this._Objects.splice(i, 1);
-			return;
-		}
-	}		
-};
-TinyGame.ObjectsHandler.prototype.Clear = function(){
-	this._Objects = [];
-};
-TinyGame.ObjectsHandler.prototype.Count = function(){
-	return this._Objects.length;
-};
