@@ -4,68 +4,67 @@
 
 var test = {};
 test.PreLoad = {
-	Load: function(){
-		game.Load.Image("Ninja", "assets/squareNinja.png");
+	load: function(){
+		game.load.spriteSheet("ninja", "assets/squareNinja.png", 88, 88);
 	},
-	Update: function(){
-		if(game.Load.Completed()){
-			game.States.Start('Main');
+	update: function(){
+		if(game.load.completed()){
+			game.states.start('Main');
 		}
 	}
 };
 test.Main = {
-	Initialize: function(){
+	initialize: function(){
+	 	star = game.add.sprite("ninja", 720, 20, 20);
+		star.zIndex = 1;
 
-	 	block = game.Add.Rect(720, 20, 50, 50, 'green');
-		// block.Body.Gravity.Y = .1;
-		block.zIndex = 1;
+		ninja = game.add.sprite('ninja', 0, 0, 20);
+		ninja.body.gravity.y = .6;
+		ninja.body.enableBounds = true;
+		ninja.body.velocity.x = 1;
 
-		ninja = game.Add.Sprite('Ninja', 0, 0, 88, 88, {x:0, y:0, width:88, height:88, frames:1});
-		ninja.Body.Gravity.Y = .6;
-		ninja.Body.EnableBounds = true;
-		ninja.Body.Velocity.X = 1;
+		starText = this.add.text(star.position.x, star.position.y, star.distance(ninja), '10pt', "blue");
 
-		blockText = this.Add.Text(block.Position.X, block.Position.Y, block.Distance(ninja), '10pt', "blue");
+		ninja.animations.add("walkRight", [0, 1, 2, 3, 4], 30, true);
+		ninja.animations.add("die", [15, 16], 20, false);
+		ninja.animations.add("throw", [5, 6], 20, true);
 
-		ninja.Add("walk_right", {x:0, y:0, width:88, height:88, frames:5, speed:75});
-		ninja.Add("Die", {x:0, y:264, width:88, height:88, frames:2, repeat:false, speed:150});
-
-		ninja.Play("walk_right");
+		ninja.animations.play("walkRight");
 	},
-	Update: function(){
+	update: function(){
 
-		test.Main.BlockLogic();
+		test.Main.StarLogic();
 
-		blockText.Position.X = block.Position.X;
-		blockText.Position.Y = block.Position.Y - 1;
-		blockText.Text = Math.round(block.Distance(ninja));
+		starText.position.x = star.position.x;
+		starText.position.y = star.position.y - 1;
+		starText.text = Math.round(star.distance(ninja));
 
 		//	Debugs stuff OBVIOUSLY
 		test.Main.DebugText();
 	},
 	NinjaDie: function(){
-		ninja.Play("Die");
-		ninja.Body.Velocity.X = 0;
+		ninja.animations.play("die");
+		ninja.body.velocity.x = 0;
 	},
 	// Block logic goes here
-	BlockLogic: function(){
+	StarLogic: function(){
 		target = new TinyGame.Vector2d();
-		target.X = ninja.Position.X - block.Position.X;
-		target.Y = ninja.Position.Y - block.Position.Y;
+		target.x = ninja.position.x - star.position.x;
+		target.y = ninja.position.y - star.position.y;
 
-		var norm = target.Normalize();
-		var distance = block.Distance(ninja);
+		var norm = target.normalize();
+		var distance = star.distance(ninja);
 
 		
 		if(distance > 1){
-			block.Body.Velocity = norm;				
+			star.body.velocity = norm;				
 		}
 		else{
-			block.Body.Velocity.X = 0;
-			block.Body.Velocity.Y = 0;
+			star.body.velocity.X = 0;
+			star.body.velocity.Y = 0;
 			test.Main.NinjaDie();
-			game.Objects.Remove(block);
-			game.Text.Remove(blockText);
+			game.objects.remove(star);
+			game.text.remove(starText);
 		}
 	},
 
@@ -73,10 +72,10 @@ test.Main = {
 	DebugText: function(){
 		//	Debug Stuffs
 		var output = document.getElementById('debug_stuffs');
-		output.innerHTML = "DeltaTime: " + game.Time.Delta;
-		output.innerHTML += "<br />FPS: " + game.Time.FPS;
-		output.innerHTML += "<br />objects: " + game.Objects.Count();
-		output.innerHTML += "<br />text objects: " + game.Text.Count();
+		output.innerHTML = "DeltaTime: " + game.time.delta;
+		output.innerHTML += "<br />FPS: " + game.time.fps;
+		output.innerHTML += "<br />objects: " + game.objects.count();
+		output.innerHTML += "<br />text objects: " + game.text.count();
 	}
 };
 

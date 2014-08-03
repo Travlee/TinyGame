@@ -1,8 +1,8 @@
 
 //	OLD - must rework sometime, maybe
 TinyGame.Input = function(game){
-	this._Game = game;
-	this._Keys = {
+	this._game = game;
+	this._keys = {
 		Backspace:8,
 		Enter:13,
 		Space:32,
@@ -16,18 +16,15 @@ TinyGame.Input = function(game){
 		W:87
 	};
 
-	this.EnableKeys = false;
-	this.EnableMouse = false;
-
-
-
+	this.enableKeys = false;
+	this.enableMouse = false;
 };
-TinyGame.Input.prototype.Add = function(key, callback){
+TinyGame.Input.prototype.add = function(key, callback){
 	// document.addEventListener(key, );
 };
-TinyGame.Input.prototype._Update = function(){
+TinyGame.Input.prototype._update = function(){
 
 };
-TinyGame.Input.prototype._KeyDown = function(){};
-TinyGame.Input.prototype._KeyUp = function(){};
-TinyGame.Input.prototype._MouseDown = function(){};
+TinyGame.Input.prototype._keyDown = function(){};
+TinyGame.Input.prototype._keyUp = function(){};
+TinyGame.Input.prototype._mouseDown = function(){};

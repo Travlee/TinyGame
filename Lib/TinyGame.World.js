@@ -2,58 +2,57 @@
 //	TinyGame.World()
 //		- Handles object physics, bounds checking, collisions and stuff yeah...
 TinyGame.World = function(game){
-	this._Game = game;
-	this.Bounds = {LEFT:0, TOP:0, RIGHT:this._Game.Scene.Width, BOTTOM:this._Game.Scene.Height};
+	this._game = game;
+	this.bounds = {left:0, top:0, right:this._game.scene.width, bottom:this._game.scene.height};
 };
-TinyGame.World.prototype._Update = function(){
+TinyGame.World.prototype._update = function(){
 	// Make updates frame-independent at some point idk when but yeah do it
 	// call object's update method if exists
 
 	// Apply gravity and velocity to objects, then update positions
-	for(var i=0, len=this._Game.Objects._Objects.length; i<len; i++){
-		var obj = this._Game.Objects._Objects[i];
-		if(obj.Body.Velocity.X === 0 && obj.Body.Velocity.Y === 0 
-			&& obj.Body.Gravity.X === 0 && obj.Body.Gravity.Y === 0) continue;
+	for(var i=0, len=this._game.objects._objects.length; i<len; i++){
+		var obj = this._game.objects._objects[i];
+		if(obj.body.velocity.x === 0 && obj.body.velocity.y === 0 
+			&& obj.body.gravity.x === 0 && obj.body.gravity.y === 0) continue;
 
 		//	Adds Gravity to Velocity vector
-		obj.Body.Velocity.Add(obj.Body.Gravity);
+		obj.body.velocity.add(obj.body.gravity);
 		//	Update positions
-		obj.Position.Add(obj.Body.Velocity);
+		obj.position.add(obj.body.velocity);
 
 		//	Bounds checking
-		if(obj.Body.EnableBounds) this._BoundsCheck(obj);
+		if(obj.body.enableBounds) this._boundsCheck(obj);
 	};	
 
 	
 	
 };
 //	idk about this yet
-TinyGame.World.prototype._Physics = function(){
-	
-};
+TinyGame.World.prototype._physics = function(){};
+
 //	Bounds checking, obviously...
 //		- ADD RADIUS CHECKS FOR CIRCLES AND JUNK
-TinyGame.World.prototype._BoundsCheck = function(obj){	
-	if(!obj.Body.EnableBounds) return;
+TinyGame.World.prototype._boundsCheck = function(obj){	
+	if(!obj.body.enableBounds) return;
 
-	//	LEFT BOUNDS...
-	if(obj.Position.X < this.Bounds.LEFT){
-		obj.Position.X = this.Bounds.LEFT;
-		obj.Body.Velocity.X = 0;
+	//	left BOUNDS...
+	if(obj.position.x < this.bounds.left){
+		obj.position.x = this.bounds.left;
+		obj.body.velocity.x = 0;
 	}
-	//	RIGHT BOUNDS...
-	else if(obj.Position.X + obj.Width > this.Bounds.RIGHT){
-		obj.Position.X = this.Bounds.RIGHT - obj.Width;
-		obj.Body.Velocity.X = 0;
+	//	right BOUNDS...
+	else if(obj.position.x + obj.width > this.bounds.right){
+		obj.position.x = this.bounds.right - obj.width;
+		obj.body.velocity.x = 0;
 	}
-	//	TOP BOUNDS...
-	if(obj.Position.Y < this.Bounds.TOP){
-		obj.Position.Y = this.Bounds.TOP;
-		obj.Body.Velocity.Y = 0;
+	//	top BOUNDS...
+	if(obj.position.y < this.bounds.top){
+		obj.position.y = this.bounds.top;
+		obj.body.velocity.y = 0;
 	}
-	//	BOTTOM BOUNDS...
-	else if(obj.Position.Y + obj.Height > this.Bounds.BOTTOM){
-		obj.Position.Y = this.Bounds.BOTTOM - obj.Height;			
-		obj.Body.Velocity.Y = 0;
+	//	bottom BOUNDS...
+	else if(obj.position.y + obj.height > this.bounds.bottom){
+		obj.position.y = this.bounds.bottom - obj.height;			
+		obj.body.velocity.y = 0;
 	}
 };

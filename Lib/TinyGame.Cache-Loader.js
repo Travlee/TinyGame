@@ -1,51 +1,62 @@
 
 //	#TinyGame.Cache
 TinyGame.Cache = function(){
-	this._Assets = 0;
-	this._Pending = 0;
-	this._Images = [];
-	this._Audio = [];
+	this._assets = 0;
+	this._pending = 0;
+	this._spriteSheets = [];
+	this._images = [];
+	this._audio = [];
 };
-TinyGame.Cache.prototype._Clear = function(){
-	this._Assets = 0;
-	this._Pending = 0;
-	this._Images = [];
-	this._Audio = [];
+TinyGame.Cache.prototype._clear = function(){
+	this._assets = 0;
+	this._pending = 0;
+	this._spriteSheets = [];
+	this._images = [];
+	this._audio = [];
 };
 
 //	#TinyGame.Loader
 TinyGame.Loader = function(game){
-	this._Cache = game._Cache;
+	this._cache = game._cache;
 };
-TinyGame.Loader.prototype._OnLoad = function(){
-	this._Cache._Pending--;
+TinyGame.Loader.prototype._onLoad = function(){
+	this._cache._pending--;
 };
-TinyGame.Loader.prototype._OnLoadError = function(e){
+TinyGame.Loader.prototype._onLoadError = function(e){
 	//console.error();
 	console.error('Error loading', e);
 };
-TinyGame.Loader.prototype.Progress = function(){
-	if(this._Cache._Pending === 0) return 100;
-	var percent = ((this._Cache._Assets - this._Cache._Pending) / this._Cache._Assets) * 100;
+TinyGame.Loader.prototype.progress = function(){
+	if(this._cache._pending === 0) return 100;
+	var percent = ((this._cache._assets - this._cache._pending) / this._cache._assets) * 100;
 	return percent;
 };
-TinyGame.Loader.prototype.Completed = function(){
-	if(this._Cache._Pending === 0) return true;
+TinyGame.Loader.prototype.completed = function(){
+	if(this._cache._pending === 0) return true;
 	return false;
 };
-TinyGame.Loader.prototype.Image = function(name, image_file){
-	this._Cache._Assets++;
-	this._Cache._Pending++;
-	this._Cache._Images[name] = new Image();
-	this._Cache._Images[name].onload = this._OnLoad.bind(this);
-	this._Cache._Images[name].src = image_file;
-	this._Cache._Images[name].onerror = this._OnLoadError.bind(this, name);
+TinyGame.Loader.prototype.image = function(title, img){
+	this._cache._assets++;
+	this._cache._pending++;
+	this._cache._images[title] = new Image();
+	this._cache._images[title].onload = this._onLoad.bind(this);
+	this._cache._images[title].src = img;
+	this._cache._images[title].onerror = this._onLoadError.bind(this, title);
 };
-TinyGame.Loader.prototype.Audio = function(name, audio_file){
-	this._Cache._Assets++;
-	this._Cache._Pending++;
-	this._Cache._Audio[name] = new Audio(audio_file);
-	this._Cache._Audio[name].oncanplaythrough = this._OnLoad.bind(this);
+TinyGame.Loader.prototype.spriteSheet = function(title, img, frame_width, frame_height){
+	this._cache._assets++;
+	this._cache._pending++;
+	var image = new Image();
+	image.onload = this._onLoad.bind(this);
+	image.src = img;
+	image.onerror = this._onLoadError.bind(this, title)
+	this._cache._spriteSheets[title] = [image, frame_width, frame_height]
+};
+TinyGame.Loader.prototype.audio = function(name, audio_file){
+	this._cache._assets++;
+	this._cache._pending++;
+	this._cache._audio[name] = new Audio(audio_file);
+	this._cache._audio[name].oncanplaythrough = this._onLoad.bind(this);
 
 	//this._Cache.Audio[name].onerror = this._OnLoadError.bind(this);
 };

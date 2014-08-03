@@ -7,23 +7,23 @@ TinyGame.RequestAnimationFrame = function(context, callback){
                               	window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     })();
 
-	this.StartId = null;
-	this.Running = false;
-	this.Callback = callback.bind(context || this);
-    this._Raf = true;
+	this.startId = null;
+	this.running = false;
+	this.callback = callback.bind(context || this);
+    this._raf = true;
 
     var self = this;
-    this.Loop = function(time){
-    	if(!self.Running) return;
-    	self.Callback(time);
-		self.StartId = window.requestAnimationFrame(self.Loop);
+    this.loop = function(time){
+    	if(!self.running) return;
+    	self.callback(time);
+		self.startId = window.requestAnimationFrame(self.loop);
     };
 };
-TinyGame.RequestAnimationFrame.prototype.Start = function(){
-	this.Running = true;
-	this.Loop();
+TinyGame.RequestAnimationFrame.prototype.start = function(){
+	this.running = true;
+	this.loop();
 };
-TinyGame.RequestAnimationFrame.prototype.Stop = function(){
-	window.cancelAnimationFrame(this.StartId);
-	this.Running = false;
+TinyGame.RequestAnimationFrame.prototype.stop = function(){
+	window.cancelAnimationFrame(this.startId);
+	this.running = false;
 };

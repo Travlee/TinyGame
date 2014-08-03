@@ -1,26 +1,26 @@
 //	TinyGame.Scene()
 //		- Handles Drawing everything and stuff yeah
 TinyGame.Scene = function(game, width, height, parent_id, bg_color){
-	this._Game = game;
+	this._game = game;
 	
-	this.Canvas = null;
-	this.Context = null;
+	this.canvas = null;
+	this.context = null;
 
-	this.Width = width;
-	this.Height = height;
-	this.Parent = parent_id;
+	this.width = width;
+	this.height = height;
+	this.parent = parent_id;
 	this.bgColor = bg_color || 'white';
 };
-TinyGame.Scene.prototype._Boot = function(){
-	this.Canvas = TinyGame.Canvas(this.Width, this.Height, this.Parent);
-	this.Context = this.Canvas.getContext('2d');
+TinyGame.Scene.prototype._boot = function(){
+	this.canvas = TinyGame.Canvas(this.width, this.height, this.parent);
+	this.context = this.canvas.getContext('2d');
 };
-TinyGame.Scene.prototype._Update = function(){
+TinyGame.Scene.prototype._update = function(){
 	//	Clears Scene, DUH READ IT
-	this._ClearScene();
+	this._clearScene();
 
 	// Merges GameObjects and TextObjects
-	var objects = this._Game.Objects._Objects.concat(this._Game.Text._Objects);
+	var objects = this._game.objects._objects.concat(this._game.text._objects);
 	
 	//	Sorts objects based on zIndex, higher last
 	objects.sort(function(a, b){return a.zIndex - b.zIndex;});
@@ -28,19 +28,22 @@ TinyGame.Scene.prototype._Update = function(){
 	//	Draw objects
 	for(var i=0, len=objects.length; i<len; i++){
 		var obj = objects[i];
+
+		//	call the objects's update method if exists
+		if(obj._update) obj._update(this._game.time.current);
 		
 		//	Check if object is off-canvas before drawing..
 		//	finish this later
 		//	also needs radius checks
-		if(obj.Position.X + obj.Width > this.Width || obj.Position.X < 0){ };
+		if(obj.position.x + obj.width > this.width || obj.position.x < 0){ };
 
 		//	Add Transforms for anchors later
-		obj._Draw(this.Context, this._Game.Time.Current);
+		obj._draw(this.context);
 	};
 };
-TinyGame.Scene.prototype._ClearScene = function(){
-	this.Context.fillStyle = this.bgColor;
-	this.Context.fillRect(0, 0, this.Width, this.Height);
+TinyGame.Scene.prototype._clearScene = function(){
+	this.context.fillStyle = this.bgColor;
+	this.context.fillRect(0, 0, this.width, this.height);
 };
 
 // Add private method for sorting objects based on z_index for layering also sometime

@@ -1,8 +1,8 @@
 TinyGame.Body = function(){
 
-	this.Velocity = new TinyGame.Vector2d();
-	this.Gravity = new TinyGame.Vector2d();
-	this.EnableBounds = false;
+	this.velocity = new TinyGame.Vector2d();
+	this.gravity = new TinyGame.Vector2d();
+	this.enableBounds = false;
 
 	
 };

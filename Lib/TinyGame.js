@@ -34,65 +34,65 @@ var TinyGame = {
 TinyGame.Game = function(width, height, parent_id, states, default_state){
 	
 	// Status Stuff
-	this._BootCompleted = false;
-	this._IsRunning = false;
-	this._Paused = false;
+	this._bootCompleted = false;
+	this._isRunning = false;
+	this._paused = false;
 
 	// Private Stuffs
-	this._Cache = null; 
+	this._cache = null; 
 
 	// Settings stuff
-	this.EnableStepping = false;
+	// this.enableStepping = false;
 
 	// Public Objects
-	this.Time = null;
-	this.FPS = null;
-	this.Add = null;
-	this.Load = null;
-	this.Objects = null;
-	this.Text = null;
+	this.time = null;
+	// this.fps = null;
+	this.add = null;
+	this.load = null;
+	this.objects = null;
+	this.text = null;
 	//this.Rand = null;
-	this.Input = null; 
-	this.Math = null;
-	this.Scene = new TinyGame.Scene(this, width, height, parent_id, 'white');
-	this.States = new TinyGame.StateHandler(this, states || null, default_state || null);
-	this.World = null;
+	this.input = null; 
+	this.math = null;
+	this.scene = new TinyGame.Scene(this, width, height, parent_id, 'white');
+	this.states = new TinyGame.StateHandler(this, states || null, default_state || null);
+	this.world = null;
 	
 	if(document.readyState === 'complete' || document.readyState === 'interactive'){
-		this._Boot();
+		this._boot();
 	}
 	else{
 		var self = this;
-		document.addEventListener('DOMContentLoaded', function(){self._Boot();}, false);		
+		document.addEventListener('DOMContentLoaded', function(){self._boot();}, false);		
 	}
 }
-TinyGame.Game.prototype._Boot = function(){
-	if(this._BootCompleted) return;
-	this._BootCompleted = true;
-	document.removeEventListener('DOMContentLoaded', this._Boot);
+TinyGame.Game.prototype._boot = function(){
+	if(this._bootCompleted) return;
+	this._bootCompleted = true;
+	document.removeEventListener('DOMContentLoaded', this._boot);
 	
-	this._Cache = new TinyGame.Cache();
-	this.Add = new TinyGame.ObjectFactory(this);
-	this.Time = new TinyGame.Time();
-	this.Load = new TinyGame.Loader(this);
-	this.Input = new TinyGame.Input(this);
-	this.Objects = new TinyGame.ObjectsHandler(this);
-	this.Text = new TinyGame.ObjectsHandler(this);
-	this.Math = TinyGame.Math;
-	this.States._Boot();
-	this.Scene._Boot();
-	this.World = new TinyGame.World(this);
+	this._cache = new TinyGame.Cache();
+	this.add = new TinyGame.ObjectFactory(this);
+	this.time = new TinyGame.Time();
+	this.load = new TinyGame.Loader(this);
+	this.input = new TinyGame.Input(this);
+	this.objects = new TinyGame.ObjectsHandler(this);
+	this.text = new TinyGame.ObjectsHandler(this);
+	this.math = TinyGame.Math;
+	this.states._boot();
+	this.scene._boot();
+	this.world = new TinyGame.World(this);
 
-	this.Raf = new TinyGame.RequestAnimationFrame(this, this._Run);
-	this.Raf.Start();
+	this.raf = new TinyGame.RequestAnimationFrame(this, this._run);
+	this.raf.start();
 };
-TinyGame.Game.prototype._Run = function(time){
-	if(!this._IsRunning) this._IsRunning = true;
+TinyGame.Game.prototype._run = function(time){
+	if(!this._isRunning) this._isRunning = true;
 
 	//	Game Loop Stuffs
-	this.Time._Update(time);
-	this.States._Update();
-	this.Input._Update();
-	this.Scene._Update();
-	this.World._Update();	// call world before scene
+	this.time._update(time);
+	this.states._update();
+	this.input._update();
+	this.world._update();
+	this.scene._update();
 };
