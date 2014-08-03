@@ -5,7 +5,8 @@
 var test = {};
 test.PreLoad = {
 	load: function(){
-		game.load.spriteSheet("ninja", "assets/squareNinja.png", 88, 88);
+		game.load.image("shuriken", "assets/shuriken.png");
+		game.load.spriteSheet("ninja", "assets/square-ninja.png", 88, 88);
 	},
 	update: function(){
 		if(game.load.completed()){
@@ -15,15 +16,16 @@ test.PreLoad = {
 };
 test.Main = {
 	initialize: function(){
-	 	star = game.add.sprite("ninja", 720, 20, 20);
-		star.zIndex = 1;
+	 	shuriken = game.add.sprite("shuriken", 720, 20);
+		shuriken.zIndex = 1;
 
-		ninja = game.add.sprite('ninja', 0, 0, 20);
+		ninja = game.add.sprite('ninja', 0, 0);
 		ninja.body.gravity.y = .6;
 		ninja.body.enableBounds = true;
 		ninja.body.velocity.x = 1;
 
-		starText = this.add.text(star.position.x, star.position.y, star.distance(ninja), '10pt', "blue");
+
+		shurikenText = this.add.text(shuriken.position.x, shuriken.position.y, shuriken.distance(ninja), '10pt', "blue");
 
 		ninja.animations.add("walkRight", [0, 1, 2, 3, 4], 30, true);
 		ninja.animations.add("die", [15, 16], 20, false);
@@ -35,9 +37,9 @@ test.Main = {
 
 		test.Main.StarLogic();
 
-		starText.position.x = star.position.x;
-		starText.position.y = star.position.y - 1;
-		starText.text = Math.round(star.distance(ninja));
+		shurikenText.position.x = shuriken.position.x;
+		shurikenText.position.y = shuriken.position.y - 1;
+		shurikenText.text = Math.round(shuriken.distance(ninja));
 
 		//	Debugs stuff OBVIOUSLY
 		test.Main.DebugText();
@@ -49,22 +51,22 @@ test.Main = {
 	// Block logic goes here
 	StarLogic: function(){
 		target = new TinyGame.Vector2d();
-		target.x = ninja.position.x - star.position.x;
-		target.y = ninja.position.y - star.position.y;
+		target.x = ninja.position.x - shuriken.position.x;
+		target.y = ninja.position.y - shuriken.position.y;
 
 		var norm = target.normalize();
-		var distance = star.distance(ninja);
+		var distance = shuriken.distance(ninja);
 
 		
 		if(distance > 1){
-			star.body.velocity = norm;				
+			shuriken.body.velocity = norm;				
 		}
 		else{
-			star.body.velocity.X = 0;
-			star.body.velocity.Y = 0;
+			shuriken.body.velocity.X = 0;
+			shuriken.body.velocity.Y = 0;
 			test.Main.NinjaDie();
-			game.objects.remove(star);
-			game.text.remove(starText);
+			game.objects.remove(shuriken);
+			game.text.remove(shurikenText);
 		}
 	},
 

@@ -35,22 +35,23 @@ TinyGame.Loader.prototype.completed = function(){
 	if(this._cache._pending === 0) return true;
 	return false;
 };
-TinyGame.Loader.prototype.image = function(title, img){
-	this._cache._assets++;
-	this._cache._pending++;
-	this._cache._images[title] = new Image();
-	this._cache._images[title].onload = this._onLoad.bind(this);
-	this._cache._images[title].src = img;
-	this._cache._images[title].onerror = this._onLoadError.bind(this, title);
-};
-TinyGame.Loader.prototype.spriteSheet = function(title, img, frame_width, frame_height){
+TinyGame.Loader.prototype.image = function(key, img){
 	this._cache._assets++;
 	this._cache._pending++;
 	var image = new Image();
 	image.onload = this._onLoad.bind(this);
 	image.src = img;
-	image.onerror = this._onLoadError.bind(this, title)
-	this._cache._spriteSheets[title] = [image, frame_width, frame_height]
+	image.onerror = this._onLoadError.bind(this, key);
+	this._cache._images[key] = image;
+};
+TinyGame.Loader.prototype.spriteSheet = function(key, img, frame_width, frame_height){
+	this._cache._assets++;
+	this._cache._pending++;
+	var image = new Image();
+	image.onload = this._onLoad.bind(this);
+	image.src = img;
+	image.onerror = this._onLoadError.bind(this, key)
+	this._cache._spriteSheets[key] = {image:image, width:frame_width, height:frame_height};
 };
 TinyGame.Loader.prototype.audio = function(name, audio_file){
 	this._cache._assets++;
