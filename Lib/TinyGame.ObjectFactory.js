@@ -10,7 +10,7 @@ TinyGame.ObjectFactory = function(game){
 TinyGame.ObjectFactory.prototype.rect = function(x, y, width, height, color){
 
 	function Rect(x, y, width, height, color){
-		TinyGame.GameObject.call(this, x, y);
+		TinyGame.GameObject.call(this, this._game, x, y);
 		this._type = "RECT";
 		this.width = width || 0;
 		this.height = height || 0;
@@ -31,8 +31,9 @@ TinyGame.ObjectFactory.prototype.rect = function(x, y, width, height, color){
 };
 TinyGame.ObjectFactory.prototype.sprite = function(key, x, y, frame){
 	
-	function Sprite(image, x, y, frame){
+	function Sprite(game, image, x, y, frame){
 		TinyGame.GameObject.call(this, x, y);
+		this._game = game;
 		this._type = "SPRITE";
 		this._img = image.image || image;
 		this.width = image.width;
@@ -117,13 +118,15 @@ TinyGame.ObjectFactory.prototype.sprite = function(key, x, y, frame){
 	else{
 		var image = this._game._cache._images[key];
 	}
-	var obj = new Sprite(image, x, y, frame);
+	var obj = new Sprite(this._game, image, x, y, frame);
 	this._game.objects._add(obj);
 	return obj;
 };
 TinyGame.ObjectFactory.prototype.text = function(x, y, text, size, color){
-	function Text(x, y, text, size, color){
+	function Text(game, x, y, text, size, color){
 		TinyGame.GameObject.call(this, x, y);
+		this._game = game;
+		this._type = "TEXT";
 		this.text = text;
 		this.size = size || '20pt';
 		this.color = color || 'black';
@@ -135,7 +138,7 @@ TinyGame.ObjectFactory.prototype.text = function(x, y, text, size, color){
 		context.fillStyle = this.color;
 		context.fillText(this.text, this.position.x, this.position.y);
 	};
-	var obj = new Text(x, y, text, size, color);
+	var obj = new Text(this._game, x, y, text, size, color);
 	this._game.text._add(obj);
 	return obj;
 };

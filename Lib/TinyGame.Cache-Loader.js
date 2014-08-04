@@ -1,4 +1,3 @@
-
 //	#TinyGame.Cache
 TinyGame.Cache = function(){
 	this._assets = 0;
@@ -22,8 +21,11 @@ TinyGame.Loader = function(game){
 TinyGame.Loader.prototype._onLoad = function(){
 	this._cache._pending--;
 };
+TinyGame.Loader.prototype._onSpriteLoad = function(){
+	this._onLoad.call(this);
+	// create new spritesheet here
+};
 TinyGame.Loader.prototype._onLoadError = function(e){
-	//console.error();
 	console.error('Error loading', e);
 };
 TinyGame.Loader.prototype.progress = function(){
@@ -48,7 +50,7 @@ TinyGame.Loader.prototype.spriteSheet = function(key, img, frame_width, frame_he
 	this._cache._assets++;
 	this._cache._pending++;
 	var image = new Image();
-	image.onload = this._onLoad.bind(this);
+	image.onload = this._onSpriteLoad.bind(this);
 	image.src = img;
 	image.onerror = this._onLoadError.bind(this, key)
 	this._cache._spriteSheets[key] = {image:image, width:frame_width, height:frame_height};

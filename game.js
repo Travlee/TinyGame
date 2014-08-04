@@ -65,8 +65,8 @@ test.Main = {
 			shuriken.body.velocity.X = 0;
 			shuriken.body.velocity.Y = 0;
 			test.Main.NinjaDie();
-			game.objects.remove(shuriken);
-			game.text.remove(shurikenText);
+			shuriken.kill();
+			shurikenText.kill();
 		}
 	},
 
