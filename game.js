@@ -16,7 +16,7 @@ test.PreLoad = {
 };
 test.Main = {
 	initialize: function(){
-	 	shuriken = game.add.sprite("shuriken", 720, 20);
+	 	shuriken = game.add.sprite("ninja", 720, 20);
 		shuriken.zIndex = 1;
 
 		ninja = game.add.sprite('ninja', 0, 0);
@@ -27,7 +27,7 @@ test.Main = {
 
 		shurikenText = this.add.text(shuriken.position.x, shuriken.position.y, shuriken.distance(ninja), '10pt', "blue");
 
-		ninja.animations.add("walkRight", [0, 1, 2, 3, 4], 30, true);
+		ninja.animations.add("walkRight", [0, 1, 2, 3, 4], 15, true);
 		ninja.animations.add("die", [15, 16], 20, false);
 		ninja.animations.add("throw", [5, 6], 20, true);
 

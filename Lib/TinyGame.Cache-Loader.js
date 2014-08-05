@@ -21,9 +21,9 @@ TinyGame.Loader = function(game){
 TinyGame.Loader.prototype._onLoad = function(){
 	this._cache._pending--;
 };
-TinyGame.Loader.prototype._onSpriteLoad = function(){
+TinyGame.Loader.prototype._onSpriteLoad = function(key, image, frame_width, frame_height){
 	this._onLoad.call(this);
-	// create new spritesheet here
+	this._cache._spriteSheets[key] = new TinyGame.SpriteSheet(image, frame_width, frame_height);
 };
 TinyGame.Loader.prototype._onLoadError = function(e){
 	console.error('Error loading', e);
@@ -50,10 +50,9 @@ TinyGame.Loader.prototype.spriteSheet = function(key, img, frame_width, frame_he
 	this._cache._assets++;
 	this._cache._pending++;
 	var image = new Image();
-	image.onload = this._onSpriteLoad.bind(this);
+	image.onload = this._onSpriteLoad.bind(this, key, image, frame_width, frame_height);
 	image.src = img;
 	image.onerror = this._onLoadError.bind(this, key)
-	this._cache._spriteSheets[key] = {image:image, width:frame_width, height:frame_height};
 };
 TinyGame.Loader.prototype.audio = function(name, audio_file){
 	this._cache._assets++;

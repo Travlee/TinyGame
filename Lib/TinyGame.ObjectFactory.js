@@ -31,25 +31,18 @@ TinyGame.ObjectFactory.prototype.rect = function(x, y, width, height, color){
 };
 TinyGame.ObjectFactory.prototype.sprite = function(key, x, y, frame){
 	
-	function Sprite(game, image, x, y, frame){
+	function Sprite(game, spriteSheet, x, y, frame){
 		TinyGame.GameObject.call(this, x, y);
 		this._game = game;
 		this._type = "SPRITE";
-		this._img = image.image || image;
-		this.width = image.width;
-		this.height = image.height;
+		this._img = spriteSheet.image;
+		this.width = spriteSheet.fWidth;
+		this.height = spriteSheet.fHeight;
 		this.animations = new Animations(this);
-		
+		console.log(this._spriteSheet);
 		this.frame = frame || 0;
-		this._frames = [];
-		this._currentFrame = null;
-		for(var i=0, frame=0, yLen=this._img.height/this.height; i<yLen; i++){
-			for(var ii=0, x=0, y=0, xLen=this._img.width/this.width; ii<xLen; ii++, frame++){
-				x = ii*this.width;
-				y = i*this.height;
-				this._frames[frame] = [x, y];
-			}
-		}	
+		this._frames = spriteSheet.frames;
+		this._currentFrame = null;	
 	}	
 	Sprite.prototype = Object.create(TinyGame.GameObject.prototype);
 	Sprite.prototype._update = function(time){

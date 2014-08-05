@@ -11,7 +11,21 @@ var TinyGame = {
 	Version: 0.1 //	idk why this is here
 };
 
-TinyGame.SpriteSheet = function(){};
+TinyGame.SpriteSheet = function(image, frameWidth, frameHeight){
+	this.image = image || null;
+	this.fWidth = frameWidth || null;
+	this.fHeight = frameHeight || null;
+
+	this.frames = [];
+
+	for(var i=0, frame=0, yLen=this.image.height/this.fHeight; i<yLen; i++){
+		for(var ii=0, x=0, y=0, xLen=this.image.width/this.fWidth; ii<xLen; ii++, frame++){
+			x = ii*this.fWidth;
+			y = i*this.fHeight;
+			this.frames[frame] = [x, y];
+		}
+	}		
+};
 
 TinyGame.Body = function(){
 	this.velocity = new TinyGame.Vector2d();
@@ -35,8 +49,10 @@ TinyGame.RequestAnimationFrame = function(context, callback){
 	
 	// Polyfill for window.Raf not done
     (function(){
-    	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                              	window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    	window.requestAnimationFrame = window.requestAnimationFrame 
+    								|| window.mozRequestAnimationFrame 
+    								|| window.webkitRequestAnimationFrame 
+    								|| window.msRequestAnimationFrame;
     })();
 
 	this.startId = null;
