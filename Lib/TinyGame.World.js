@@ -20,15 +20,16 @@ TinyGame.World.prototype._update = function(){
 		//	Update positions
 		obj.position.add(obj.body.velocity);
 
-		//	Bounds checking
+		//	Bounds checking if enabled under body.enableBounds
 		if(obj.body.enableBounds) this._boundsCheck(obj);
 	};	
 
 	
-	
 };
 //	idk about this yet
-TinyGame.World.prototype._physics = function(){};
+TinyGame.World.prototype._physics = function(){
+
+};
 
 //	Bounds checking, obviously...
 //		- ADD RADIUS CHECKS FOR CIRCLES AND JUNK

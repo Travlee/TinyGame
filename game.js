@@ -5,7 +5,7 @@
 var test = {};
 test.PreLoad = {
 	load: function(){
-		game.load.image('shuriken', "assets/shuriken.png");
+		// game.load.image('shuriken', "assets/shuriken.png");
 		game.load.spriteSheet('ninja', "assets/square-ninja.png", 88, 88);
 	},
 	update: function(){
@@ -16,13 +16,13 @@ test.PreLoad = {
 };
 test.Main = {
 	initialize: function(){
-	 	shuriken = game.add.sprite('shuriken', 720, 20);
-		shuriken.zIndex = 1;
+	 	shuriken = game.add.sprite('ninja', 720, 20, 20);
+		shuriken.layer = 1;
 
 		ninja = game.add.sprite('ninja', 0, 0);
-		ninja.body.gravity.y = .6;
+		ninja.body.gravity.set(0, .6);
 		ninja.body.enableBounds = true;
-		ninja.body.velocity.x = 1;
+		ninja.body.velocity.set(1);
 
 
 		shurikenText = this.add.text(shuriken.position.x, shuriken.position.y, shuriken.distance(ninja), '10pt', "blue");
@@ -37,33 +37,28 @@ test.Main = {
 
 		test.Main.StarLogic();
 
-		shurikenText.position.x = shuriken.position.x;
-		shurikenText.position.y = shuriken.position.y - 1;
-		shurikenText.text = Math.round(shuriken.distance(ninja));
+		shurikenText.position.set(shuriken.position.x, shuriken.position.y);
+		shurikenText.text = Math.floor(shuriken.position.distance(ninja.position));
 
 		//	Debugs stuff OBVIOUSLY
 		test.Main.DebugText();
 	},
 	NinjaDie: function(){
 		ninja.animations.play("die");
-		ninja.body.velocity.x = 0;
+		ninja.body.velocity.zero();
 	},
 	// Block logic goes here
 	StarLogic: function(){
-		target = new TinyGame.Vector2d();
-		target.x = ninja.position.x - shuriken.position.x;
-		target.y = ninja.position.y - shuriken.position.y;
-
-		var norm = target.normalize();
 		var distance = shuriken.distance(ninja);
-
+		var target = new TinyGame.Vector2(ninja.position.x - shuriken.position.x, ninja.position.y - shuriken.position.y);
 		
 		if(distance > 1){
-			shuriken.body.velocity = norm;				
+			shuriken.body.velocity.set(target.normalize().multiply(4));
+
+							
 		}
 		else{
-			shuriken.body.velocity.X = 0;
-			shuriken.body.velocity.Y = 0;
+			shuriken.body.velocity.zero();
 			test.Main.NinjaDie();
 			shuriken.kill();
 			shurikenText.kill();

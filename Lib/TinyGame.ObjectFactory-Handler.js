@@ -18,8 +18,8 @@ TinyGame.ObjectFactory.prototype.text = function(x, y, text, size, color){
 	this._game.text._add(obj);
 	return obj;
 };
-TinyGame.ObjectFactory.prototype.tileSprite = function(){};
 TinyGame.ObjectFactory.prototype.circle = function(){};
+TinyGame.ObjectFactory.prototype.point = function(x, y){};
 
 //	#TinyGame.ObjectsHandler()
 //	

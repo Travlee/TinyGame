@@ -23,7 +23,7 @@ TinyGame.Scene.prototype._update = function(){
 	var objects = this._game.objects._objects.concat(this._game.text._objects);
 	
 	//	Sorts objects based on zIndex, higher last
-	objects.sort(function(a, b){return a.zIndex - b.zIndex;});
+	objects.sort(function(a, b){return a.layer - b.layer;});
 
 	//	Draw objects
 	for(var i=0, len=objects.length; i<len; i++){

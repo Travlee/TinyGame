@@ -80,12 +80,27 @@ TinyGame.RequestAnimationFrame.prototype = {
 	}
 };
 
-TinyGame.Vector2d = function(x, y){
+TinyGame.Vector2 = function(x, y){
 	this.x = x || 0;
 	this.y = y || 0;
 };
-TinyGame.Vector2d.prototype.add = function(v){
-	if(v instanceof TinyGame.Vector2d){
+TinyGame.Vector2.prototype.zero = function(){
+	this.x = 0;
+	this.y = 0;
+};
+TinyGame.Vector2.prototype.set = function(x, y){
+	if(typeof x === "object"){
+		this.x = x.x;
+		this.y = x.y;
+	}
+	else{
+		this.x = x || 0;
+		this.y = y || 0;		
+	}
+
+};
+TinyGame.Vector2.prototype.add = function(v){
+	if(v instanceof TinyGame.Vector2){
 		this.x += v.x;
 		this.y += v.y;
 	}else{
@@ -94,8 +109,8 @@ TinyGame.Vector2d.prototype.add = function(v){
 	}
 	return this;
 };
-TinyGame.Vector2d.prototype.substract = function(v){
-	if(v instanceof TinyGame.Vector2d){
+TinyGame.Vector2.prototype.substract = function(v){
+	if(v instanceof TinyGame.Vector2){
 		this.x -= v.x;
 		this.y -= v.y;
 	}else{
@@ -104,8 +119,8 @@ TinyGame.Vector2d.prototype.substract = function(v){
 	}
 	return this;
 };
-TinyGame.Vector2d.prototype.multiply = function(v){
-	if(v instanceof TinyGame.Vector2d){
+TinyGame.Vector2.prototype.multiply = function(v){
+	if(v instanceof TinyGame.Vector2){
 		this.x *= v.x;
 		this.y *= v.y;
 	}else{
@@ -114,15 +129,29 @@ TinyGame.Vector2d.prototype.multiply = function(v){
 	}
 	return this;
 };
-TinyGame.Vector2d.prototype.normalize = function(){
-	var normal = new TinyGame.Vector2d(this.x, this.y);
+TinyGame.Vector2.prototype.normalize = function(){
+	var normal = new TinyGame.Vector2(this.x, this.y);
 	var length = this.length();
 	normal.x = normal.x/length;
 	normal.y = normal.y/length;
 	return normal;
 };
-TinyGame.Vector2d.prototype.length = function(){
+TinyGame.Vector2.prototype.length = function(){
 	var length = (this.x * this.x) + (this.y * this.y);
 	return Math.sqrt(length);
 };
-TinyGame.Vector2d.prototype.distance = function(v){};
+TinyGame.Vector2.prototype.distance = function(v){
+	var x, y;
+	x = v.x - this.x;
+	y = v.y - this.y;
+	if(typeof sqrt === 'boolean' && sqrt === false){
+		return x*x + y*y;
+	}
+	return Math.sqrt(x*x + y*y);
+};
+TinyGame.Vector2.prototype.qDistance = function(v){
+	var x, y;
+	x = v.x - this.x;
+	y = v.y - this.y;
+	return x*x + y*y;	
+};

@@ -2,14 +2,15 @@
 //		-Base Object Class-ish
 TinyGame.GameObject = function(x, y){
 	this._type = null;
-	this.position = new TinyGame.Vector2d(x || 0, y || 0);
+	this.position = new TinyGame.Vector2(x || 0, y || 0);
 	this.body = new TinyGame.Body();
 
-	// this.Anchor = new TinyGame.Vector2d(.5, .5); do later, too hard
-	this.zIndex = 0;
+	// this.Anchor = new TinyGame.Vector2(.5, .5); do later, too hard
+	this.layer = 0;
 };
 TinyGame.GameObject.prototype._draw = function(context) {};
 TinyGame.GameObject.prototype._update = function(time) {};
+TinyGame.GameObject.prototype.update = function(time){};
 TinyGame.GameObject.prototype.distance = function(obj) {
 	return TinyGame.Math.Vectors.Distance(this, obj);
 };
@@ -25,9 +26,12 @@ TinyGame.GameObject.prototype.kill = function(){
 //	TinyGame.Body()
 //
 TinyGame.Body = function(){
-	this.velocity = new TinyGame.Vector2d();
-	this.gravity = new TinyGame.Vector2d();
+	this.velocity = new TinyGame.Vector2();
+	this.gravity = new TinyGame.Vector2();
 	this.enableBounds = false;	
+	this.width = 0;
+	this.height = 0;
+	this.radius = 0;
 };
 
 //	TinyGame.AnimationManager()
@@ -122,6 +126,9 @@ TinyGame.Sprite.prototype._draw = function(context, time){
 	else{
 		context.drawImage(this._image, this.position.x, this.position.y, this.body.width, this.body.height);
 	}
+};
+TinyGame.Sprite.prototype.autoScroll = function(axis, speed){
+
 };
 
 //	TinyGame.Text()
