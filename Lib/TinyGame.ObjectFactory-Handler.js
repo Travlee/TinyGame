@@ -9,13 +9,7 @@ TinyGame.ObjectFactory.prototype.rect = function(x, y, width, height, color){
 	return obj;
 };
 TinyGame.ObjectFactory.prototype.sprite = function(key, x, y, frame){
-	if(this._game._cache._spriteSheets[key]){
-		var image = this._game._cache._spriteSheets[key];
-	}
-	else{
-		var image = this._game._cache._images[key];
-	}
-	var obj = new TinyGame.Sprite(this._game, image, x, y, frame);
+	var obj = new TinyGame.Sprite(this._game, key, x, y, frame);
 	this._game.objects._add(obj);
 	return obj;
 };

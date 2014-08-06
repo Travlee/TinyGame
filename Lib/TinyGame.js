@@ -8,7 +8,11 @@
 	}
 })();
 var TinyGame = {
-	Version: 0.1 //	idk why this is here
+	TYPES: {
+		SPRITE: "SPRITE",
+		TEXT:"TEXT",
+		RECT:"RECT"
+	}
 };
 
 TinyGame.SpriteSheet = function(image, frameWidth, frameHeight){
@@ -29,11 +33,7 @@ TinyGame.SpriteSheet = function(image, frameWidth, frameHeight){
 	}		
 };
 
-TinyGame.Body = function(){
-	this.velocity = new TinyGame.Vector2d();
-	this.gravity = new TinyGame.Vector2d();
-	this.enableBounds = false;	
-};
+
 
 //	TinyGame.Canvas() - Object
 TinyGame.Canvas = function(width, height, parent_id, id){
@@ -84,46 +84,45 @@ TinyGame.Vector2d = function(x, y){
 	this.x = x || 0;
 	this.y = y || 0;
 };
-TinyGame.Vector2d.prototype = {
-	add: function(v){
-		if(v instanceof TinyGame.Vector2d){
-			this.x += v.x;
-			this.y += v.y;
-		}else{
-			this.x += v;
-			this.y += v;
-		}
-		return this;
-	},
-	substract: function(v){
-		if(v instanceof TinyGame.Vector2d){
-			this.x -= v.x;
-			this.y -= v.y;
-		}else{
-			this.x -= v;
-			this.y -= v;
-		}
-		return this;
-	},
-	multiply: function(v){
-		if(v instanceof TinyGame.Vector2d){
-			this.x *= v.x;
-			this.y *= v.y;
-		}else{
-			this.x *= v;
-			this.y *= v;
-		}
-		return this;
-	},
-	normalize: function(){
-		var normal = new TinyGame.Vector2d(this.x, this.y);
-		var length = this.length();
-		normal.x = normal.x/length;
-		normal.y = normal.y/length;
-		return normal;
-	},
-	length: function(){
-		var length = (this.x * this.x) + (this.y * this.y);
-		return Math.sqrt(length);
+TinyGame.Vector2d.prototype.add = function(v){
+	if(v instanceof TinyGame.Vector2d){
+		this.x += v.x;
+		this.y += v.y;
+	}else{
+		this.x += v;
+		this.y += v;
 	}
+	return this;
 };
+TinyGame.Vector2d.prototype.substract = function(v){
+	if(v instanceof TinyGame.Vector2d){
+		this.x -= v.x;
+		this.y -= v.y;
+	}else{
+		this.x -= v;
+		this.y -= v;
+	}
+	return this;
+};
+TinyGame.Vector2d.prototype.multiply = function(v){
+	if(v instanceof TinyGame.Vector2d){
+		this.x *= v.x;
+		this.y *= v.y;
+	}else{
+		this.x *= v;
+		this.y *= v;
+	}
+	return this;
+};
+TinyGame.Vector2d.prototype.normalize = function(){
+	var normal = new TinyGame.Vector2d(this.x, this.y);
+	var length = this.length();
+	normal.x = normal.x/length;
+	normal.y = normal.y/length;
+	return normal;
+};
+TinyGame.Vector2d.prototype.length = function(){
+	var length = (this.x * this.x) + (this.y * this.y);
+	return Math.sqrt(length);
+};
+TinyGame.Vector2d.prototype.distance = function(v){};

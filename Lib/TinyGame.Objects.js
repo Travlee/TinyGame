@@ -22,29 +22,12 @@ TinyGame.GameObject.prototype.kill = function(){
 	}
 };
 
-//	TinyGame.Sprite()
-//	
-TinyGame.Sprite = function(game, spriteSheet, x, y, frame){
-	TinyGame.GameObject.call(this, x, y);
-	this._game = game;
-	this._type = "SPRITE";
-	this._img = spriteSheet.image;
-	this.width = spriteSheet.fWidth;
-	this.height = spriteSheet.fHeight;
-	this.animations = new TinyGame.AnimationManager(this);
-	this.frame = frame || 0;
-	this._frames = spriteSheet.frames;
-	this._currentFrame = null;	
-};
-TinyGame.Sprite.prototype = Object.create(TinyGame.GameObject.prototype);
-TinyGame.Sprite.prototype._update = function(time){
-	if(this.animations._isPlaying){
-		this.animations._update(time);
-	}
-	this._currentFrame = this._frames[this.frame];
-};
-TinyGame.Sprite.prototype._draw = function(context, time){
-	context.drawImage(this._img, this._currentFrame.x, this._currentFrame.y, this.width, this.height, this.position.x, this.position.y, this.width, this.height);
+//	TinyGame.Body()
+//
+TinyGame.Body = function(){
+	this.velocity = new TinyGame.Vector2d();
+	this.gravity = new TinyGame.Vector2d();
+	this.enableBounds = false;	
 };
 
 //	TinyGame.AnimationManager()
@@ -97,6 +80,42 @@ TinyGame.AnimationManager.prototype.play = function(key){
 };
 TinyGame.AnimationManager.prototype.stop = function(){
 	this._isPlaying = false;
+};
+
+//	TinyGame.Sprite()
+//	
+TinyGame.Sprite = function(game, key, x, y, frame){
+	TinyGame.GameObject.call(this, x, y);
+	this._game = game;
+	this._type = TinyGame.TYPES.SPRITE;
+	this._img = null;
+
+	this.animations = new TinyGame.AnimationManager(this);
+	this.frame = frame || 0;
+	this._frames = null;
+	this._currentFrame = null;
+
+	this.body.width = null;
+	this.body.height = null;
+	
+	this._getSheet(key);	
+};
+TinyGame.Sprite.prototype = Object.create(TinyGame.GameObject.prototype);
+TinyGame.Sprite.prototype._getSheet = function(key){
+	var ss = this._game._cache._assets[key];
+	this._img = ss.image;
+	this._frames = ss.frames;
+	this.body.width = ss.fWidth;
+	this.body.height = ss.fHeight;
+};
+TinyGame.Sprite.prototype._update = function(time){
+	if(this.animations._isPlaying){
+		this.animations._update(time);
+	}
+	this._currentFrame = this._frames[this.frame];
+};
+TinyGame.Sprite.prototype._draw = function(context, time){
+	context.drawImage(this._img, this._currentFrame.x, this._currentFrame.y, this.body.width, this.body.height, this.position.x, this.position.y, this.body.width, this.body.height);
 };
 
 //	TinyGame.Text()

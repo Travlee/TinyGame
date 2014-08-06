@@ -9,7 +9,8 @@ test.PreLoad = {
 		game.load.spriteSheet("ninja", "assets/square-ninja.png", 88, 88);
 	},
 	update: function(){
-		if(game.load.completed()){
+		console.log(game.load.progress);
+		if(game.load.completed){
 			game.states.start('Main');
 		}
 	}

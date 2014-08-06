@@ -41,8 +41,8 @@ TinyGame.World.prototype._boundsCheck = function(obj){
 		obj.body.velocity.x = 0;
 	}
 	//	right BOUNDS...
-	else if(obj.position.x + obj.width > this.bounds.right){
-		obj.position.x = this.bounds.right - obj.width;
+	else if(obj.position.x + obj.body.width > this.bounds.right){
+		obj.position.x = this.bounds.right - obj.body.width;
 		obj.body.velocity.x = 0;
 	}
 	//	top BOUNDS...
@@ -51,8 +51,8 @@ TinyGame.World.prototype._boundsCheck = function(obj){
 		obj.body.velocity.y = 0;
 	}
 	//	bottom BOUNDS...
-	else if(obj.position.y + obj.height > this.bounds.bottom){
-		obj.position.y = this.bounds.bottom - obj.height;			
+	else if(obj.position.y + obj.body.height > this.bounds.bottom){
+		obj.position.y = this.bounds.bottom - obj.body.height;			
 		obj.body.velocity.y = 0;
 	}
 };
