@@ -13,16 +13,18 @@ var TinyGame = {
 
 TinyGame.SpriteSheet = function(image, frameWidth, frameHeight){
 	this.image = image || null;
+	this.width = image.width;
+	this.height = image.height;
 	this.fWidth = frameWidth || null;
 	this.fHeight = frameHeight || null;
 
 	this.frames = [];
 
-	for(var i=0, frame=0, yLen=this.image.height/this.fHeight; i<yLen; i++){
-		for(var ii=0, x=0, y=0, xLen=this.image.width/this.fWidth; ii<xLen; ii++, frame++){
+	for(var i=0, frame=0, yLen=this.height/this.fHeight; i<yLen; i++){
+		for(var ii=0, x=0, y=0, xLen=this.width/this.fWidth; ii<xLen; ii++, frame++){
 			x = ii*this.fWidth;
 			y = i*this.fHeight;
-			this.frames[frame] = [x, y];
+			this.frames[frame] = {x:x, y:y};
 		}
 	}		
 };
@@ -67,57 +69,61 @@ TinyGame.RequestAnimationFrame = function(context, callback){
 		self.startId = window.requestAnimationFrame(self.loop);
     };
 };
-TinyGame.RequestAnimationFrame.prototype.start = function(){
-	this.running = true;
-	this.loop();
-};
-TinyGame.RequestAnimationFrame.prototype.stop = function(){
-	window.cancelAnimationFrame(this.startId);
-	this.running = false;
+TinyGame.RequestAnimationFrame.prototype = {
+	start: function(){
+		this.running = true;
+		this.loop();
+	},
+	stop: function(){
+		window.cancelAnimationFrame(this.startId);
+		this.running = false;
+	}
 };
 
 TinyGame.Vector2d = function(x, y){
 	this.x = x || 0;
 	this.y = y || 0;
 };
-TinyGame.Vector2d.prototype.add = function(v){
-	if(v instanceof TinyGame.Vector2d){
-		this.x += v.x;
-		this.y += v.y;
-	}else{
-		this.x += v;
-		this.y += v;
+TinyGame.Vector2d.prototype = {
+	add: function(v){
+		if(v instanceof TinyGame.Vector2d){
+			this.x += v.x;
+			this.y += v.y;
+		}else{
+			this.x += v;
+			this.y += v;
+		}
+		return this;
+	},
+	substract: function(v){
+		if(v instanceof TinyGame.Vector2d){
+			this.x -= v.x;
+			this.y -= v.y;
+		}else{
+			this.x -= v;
+			this.y -= v;
+		}
+		return this;
+	},
+	multiply: function(v){
+		if(v instanceof TinyGame.Vector2d){
+			this.x *= v.x;
+			this.y *= v.y;
+		}else{
+			this.x *= v;
+			this.y *= v;
+		}
+		return this;
+	},
+	normalize: function(){
+		var normal = new TinyGame.Vector2d(this.x, this.y);
+		var length = this.length();
+		normal.x = normal.x/length;
+		normal.y = normal.y/length;
+		return normal;
+	},
+	length: function(){
+		var length = (this.x * this.x) + (this.y * this.y);
+		return Math.sqrt(length);
 	}
-	return this;
-};
-TinyGame.Vector2d.prototype.substract = function(v){
-	if(v instanceof TinyGame.Vector2d){
-		this.x -= v.x;
-		this.y -= v.y;
-	}else{
-		this.x -= v;
-		this.y -= v;
-	}
-	return this;
-};
-TinyGame.Vector2d.prototype.multiply = function(v){
-	if(v instanceof TinyGame.Vector2d){
-		this.x *= v.x;
-		this.y *= v.y;
-	}else{
-		this.x *= v;
-		this.y *= v;
-	}
-	return this;
-};
-TinyGame.Vector2d.prototype.normalize = function(){
-	var normal = new TinyGame.Vector2d(this.x, this.y);
-	var length = this.length();
-	normal.x = normal.x/length;
-	normal.y = normal.y/length;
-	return normal;
-};
-TinyGame.Vector2d.prototype.length = function(){
-	var length = (this.x * this.x) + (this.y * this.y);
-	return Math.sqrt(length);
 };

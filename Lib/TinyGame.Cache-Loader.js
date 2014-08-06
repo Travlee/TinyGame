@@ -62,3 +62,6 @@ TinyGame.Loader.prototype.audio = function(name, audio_file){
 
 	//this._Cache.Audio[name].onerror = this._OnLoadError.bind(this);
 };
+
+//	Add objects to cache onLoad
+//	remove assets property
