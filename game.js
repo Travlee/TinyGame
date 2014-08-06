@@ -5,11 +5,10 @@
 var test = {};
 test.PreLoad = {
 	load: function(){
-		game.load.image("shuriken", "assets/shuriken.png");
-		game.load.spriteSheet("ninja", "assets/square-ninja.png", 88, 88);
+		game.load.image('shuriken', "assets/shuriken.png");
+		game.load.spriteSheet('ninja', "assets/square-ninja.png", 88, 88);
 	},
 	update: function(){
-		console.log(game.load.progress);
 		if(game.load.completed){
 			game.states.start('Main');
 		}
@@ -17,7 +16,7 @@ test.PreLoad = {
 };
 test.Main = {
 	initialize: function(){
-	 	shuriken = game.add.sprite("ninja", 720, 20);
+	 	shuriken = game.add.sprite('shuriken', 720, 20);
 		shuriken.zIndex = 1;
 
 		ninja = game.add.sprite('ninja', 0, 0);

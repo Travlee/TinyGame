@@ -88,34 +88,40 @@ TinyGame.Sprite = function(game, key, x, y, frame){
 	TinyGame.GameObject.call(this, x, y);
 	this._game = game;
 	this._type = TinyGame.TYPES.SPRITE;
-	this._img = null;
 
-	this.animations = new TinyGame.AnimationManager(this);
-	this.frame = frame || 0;
-	this._frames = null;
-	this._currentFrame = null;
-
-	this.body.width = null;
-	this.body.height = null;
-	
-	this._getSheet(key);	
+	var ss = this._game._cache._assets[key];
+	if(ss instanceof TinyGame.SpriteSheet){
+		this.animations = new TinyGame.AnimationManager(this);
+		this._image = ss.image;
+		this._frames = ss.frames;
+		this._currentFrame = null;
+		this.frame = frame || 0;
+		this.body.width = ss.fWidth;
+		this.body.height = ss.fHeight;
+	}
+	else{
+		this._image = ss;
+		this._frames = null;
+		this._currentFrame = null;
+		this.body.width = ss.width;
+		this.body.height = ss.height;
+	}
 };
 TinyGame.Sprite.prototype = Object.create(TinyGame.GameObject.prototype);
-TinyGame.Sprite.prototype._getSheet = function(key){
-	var ss = this._game._cache._assets[key];
-	this._img = ss.image;
-	this._frames = ss.frames;
-	this.body.width = ss.fWidth;
-	this.body.height = ss.fHeight;
-};
 TinyGame.Sprite.prototype._update = function(time){
+	if(!this._frames) return;
 	if(this.animations._isPlaying){
 		this.animations._update(time);
 	}
 	this._currentFrame = this._frames[this.frame];
 };
 TinyGame.Sprite.prototype._draw = function(context, time){
-	context.drawImage(this._img, this._currentFrame.x, this._currentFrame.y, this.body.width, this.body.height, this.position.x, this.position.y, this.body.width, this.body.height);
+	if(this._frames){
+		context.drawImage(this._image, this._currentFrame.x, this._currentFrame.y, this.body.width, this.body.height, this.position.x, this.position.y, this.body.width, this.body.height);
+	}
+	else{
+		context.drawImage(this._image, this.position.x, this.position.y, this.body.width, this.body.height);
+	}
 };
 
 //	TinyGame.Text()
