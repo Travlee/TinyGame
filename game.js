@@ -26,7 +26,7 @@ test.Main = {
 		ninja.body.bounce.setY(12);
 
 
-		shurikenText = this.add.text(shuriken.position.x, shuriken.position.y, shuriken.distance(ninja), '10pt', "blue");
+		shurikenText = this.add.text(shuriken.position.x, shuriken.position.y, shuriken.position.distance(ninja.position), '10pt', "blue");
 
 		ninja.animations.add("walkRight", [0, 1, 2, 3, 4], 15, true);
 		ninja.animations.add("die", [15, 16], 20, false);
@@ -51,7 +51,7 @@ test.Main = {
 	},
 	// Block logic goes here
 	StarLogic: function(){
-		var distance = shuriken.distance(ninja);
+		var distance = shuriken.position.distance(ninja.position);
 		var target = new TinyGame.Vector2(ninja.position.x - shuriken.position.x, ninja.position.y - shuriken.position.y);
 		
 		if(distance > 1){

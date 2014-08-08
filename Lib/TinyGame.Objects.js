@@ -11,9 +11,6 @@ TinyGame.GameObject = function(x, y){
 TinyGame.GameObject.prototype._draw = function(context) {};
 TinyGame.GameObject.prototype._update = function(time) {};
 TinyGame.GameObject.prototype.update = function(time){};
-TinyGame.GameObject.prototype.distance = function(obj) {
-	return TinyGame.Math.Vectors.Distance(this, obj);
-};
 TinyGame.GameObject.prototype.kill = function(){
 	if(this._type === "TEXT"){
 		this._game.text.remove(this);
