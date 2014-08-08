@@ -27,11 +27,14 @@ TinyGame.GameObject.prototype.kill = function(){
 //
 TinyGame.Body = function(){
 	this.velocity = new TinyGame.Vector2();
-	this.gravity = new TinyGame.Vector2();
-	this.enableBounds = false;	
 	this.width = 0;
 	this.height = 0;
 	this.radius = 0;
+
+	//	physics
+	this.collideBounds = false;
+	this.gravity = new TinyGame.Vector2();	
+	this.bounce = new TinyGame.Vector2();
 };
 
 //	TinyGame.AnimationManager()
@@ -131,6 +134,12 @@ TinyGame.Sprite.prototype.autoScroll = function(axis, speed){
 
 };
 
+// TinyGame.Line()
+//	-do later
+TinyGame.Line = function(){};
+TinyGame.Line.prototype = Object.create(TinyGame.GameObject.prototype);
+TinyGame.Line.prototype._draw = function(context){};
+
 //	TinyGame.Text()
 //
 TinyGame.Text = function(game, x, y, text, size, color){
@@ -141,7 +150,6 @@ TinyGame.Text = function(game, x, y, text, size, color){
 	this.size = size || '20pt';
 	this.color = color || 'black';
 	this.font = "Verdana, Geneva, sans-serif";
-
 };
 TinyGame.Text.prototype = Object.create(TinyGame.GameObject.prototype);
 TinyGame.Text.prototype._draw = function(context){

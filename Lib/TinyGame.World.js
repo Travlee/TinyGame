@@ -4,6 +4,8 @@
 TinyGame.World = function(game){
 	this._game = game;
 	this.bounds = {left:0, top:0, right:this._game.scene.width, bottom:this._game.scene.height};
+	this.width = this._game.scene.width || 0;
+	this.height = this._game.scene.height || 0;
 };
 TinyGame.World.prototype._update = function(){
 	// Make updates frame-independent at some point idk when but yeah do it
@@ -21,7 +23,7 @@ TinyGame.World.prototype._update = function(){
 		obj.position.add(obj.body.velocity);
 
 		//	Bounds checking if enabled under body.enableBounds
-		if(obj.body.enableBounds) this._boundsCheck(obj);
+		if(obj.body.collideBounds) this._boundsCheck(obj);
 	};	
 
 	
@@ -30,30 +32,32 @@ TinyGame.World.prototype._update = function(){
 TinyGame.World.prototype._physics = function(){
 
 };
+TinyGame.World.prototype._collisions = function(){
+
+};
 
 //	Bounds checking, obviously...
-//		- ADD RADIUS CHECKS FOR CIRCLES AND JUNK
 TinyGame.World.prototype._boundsCheck = function(obj){	
-	if(!obj.body.enableBounds) return;
+	if(!obj.body.collideBounds) return;
 
 	//	left BOUNDS...
 	if(obj.position.x < this.bounds.left){
 		obj.position.x = this.bounds.left;
-		obj.body.velocity.x = 0;
+		obj.body.velocity.invertX().multiplyX(obj.body.bounce.x * (this._game.time.delta/1000));
 	}
 	//	right BOUNDS...
 	else if(obj.position.x + obj.body.width > this.bounds.right){
 		obj.position.x = this.bounds.right - obj.body.width;
-		obj.body.velocity.x = 0;
+		obj.body.velocity.invertX().multiplyX(obj.body.bounce.x * (this._game.time.delta/1000));
 	}
 	//	top BOUNDS...
 	if(obj.position.y < this.bounds.top){
 		obj.position.y = this.bounds.top;
-		obj.body.velocity.y = 0;
+		obj.body.velocity.invertY().multiplyY(obj.body.bounce.y * (this._game.time.delta/1000));
 	}
 	//	bottom BOUNDS...
 	else if(obj.position.y + obj.body.height > this.bounds.bottom){
 		obj.position.y = this.bounds.bottom - obj.body.height;			
-		obj.body.velocity.y = 0;
+		obj.body.velocity.invertY().multiplyY(obj.body.bounce.y * (this._game.time.delta/1000));
 	}
 };

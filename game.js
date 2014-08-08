@@ -20,9 +20,10 @@ test.Main = {
 		shuriken.layer = 1;
 
 		ninja = game.add.sprite('ninja', 0, 0);
-		ninja.body.gravity.set(0, .6);
-		ninja.body.enableBounds = true;
-		ninja.body.velocity.set(1);
+		ninja.body.gravity.setY(1);
+		ninja.body.collideBounds = true;
+		ninja.body.velocity.setX(1);
+		ninja.body.bounce.setY(12);
 
 
 		shurikenText = this.add.text(shuriken.position.x, shuriken.position.y, shuriken.distance(ninja), '10pt', "blue");
@@ -46,6 +47,7 @@ test.Main = {
 	NinjaDie: function(){
 		ninja.animations.play("die");
 		ninja.body.velocity.zero();
+		ninja.body.bounce.zero();
 	},
 	// Block logic goes here
 	StarLogic: function(){
@@ -53,7 +55,7 @@ test.Main = {
 		var target = new TinyGame.Vector2(ninja.position.x - shuriken.position.x, ninja.position.y - shuriken.position.y);
 		
 		if(distance > 1){
-			shuriken.body.velocity.set(target.normalize().multiply(4));
+			shuriken.body.velocity.set(target.normalize().multiply(3));
 
 							
 		}
