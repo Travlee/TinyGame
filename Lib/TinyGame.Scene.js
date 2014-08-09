@@ -19,8 +19,7 @@ TinyGame.Scene.prototype._update = function(){
 	//	Clears Scene, DUH READ IT
 	this._clearScene();
 
-	// Merges GameObjects and TextObjects
-	var objects = this._game.objects._objects.concat(this._game.text._objects);
+	var objects = this._game.objects._objects;
 	
 	//	Sorts objects based on zIndex, higher last
 	objects.sort(function(a, b){return a.layer - b.layer;});
@@ -28,9 +27,6 @@ TinyGame.Scene.prototype._update = function(){
 	//	Draw objects
 	for(var i=0, len=objects.length; i<len; i++){
 		var obj = objects[i];
-
-		//	call the objects's update method if exists
-		if(obj._update) obj._update(this._game.time.current);
 		
 		//	Check if object is off-canvas before drawing..
 		//	finish this later

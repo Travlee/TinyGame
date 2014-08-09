@@ -8,10 +8,11 @@
 	}
 })();
 var TinyGame = {
-	TYPES: {
-		SPRITE: "SPRITE",
-		TEXT:"TEXT",
-		RECT:"RECT"
+	types: {
+		sprite: "SPRITE",
+		text:"TEXT",
+		rect:"RECT",
+		circle:"CIRCLE"
 	}
 };
 

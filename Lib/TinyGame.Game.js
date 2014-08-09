@@ -28,14 +28,14 @@ TinyGame.Game = function(width, height, parent_id, states, default_state){
 
 	// Public Objects
 	this.time = null;
-	// this.fps = null;
+	this._cache = null;
 	this.add = null;
 	this.load = null;
 	this.objects = null;
-	this.text = null;
 	//this.Rand = null;
-	this.input = null; 
+	// this.input = null; 
 	this.math = null;
+	this.physics = null;
 	this.scene = new TinyGame.Scene(this, width, height, parent_id, 'white');
 	this.states = new TinyGame.StateHandler(this, states || null, default_state || null);
 	this.world = null;
@@ -57,9 +57,9 @@ TinyGame.Game.prototype._boot = function(){
 	this.add = new TinyGame.ObjectFactory(this);
 	this.time = new TinyGame.Time();
 	this.load = new TinyGame.Loader(this);
-	this.input = new TinyGame.Input(this);
+	// this.input = new TinyGame.Input(this);
 	this.objects = new TinyGame.ObjectsHandler(this);
-	this.text = new TinyGame.ObjectsHandler(this);
+	this.physics = new TinyGame.Physics(this);
 	this.math = TinyGame.Math;
 	this.states._boot();
 	this.scene._boot();
@@ -73,8 +73,9 @@ TinyGame.Game.prototype._run = function(time){
 
 	//	Game Loop Stuffs
 	this.time._update(time);
-	this.states._update();
-	this.input._update();
-	this.world._update();
-	this.scene._update();
+	this.states._update(this.time.gameTime);
+	// this.input._update();
+	this.physics._update(this.time.gameTime);
+	this.world._update(this.time.gameTime);
+	this.scene._update(this.time.gameTime);
 };

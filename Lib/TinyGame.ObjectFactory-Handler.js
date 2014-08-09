@@ -15,7 +15,7 @@ TinyGame.ObjectFactory.prototype.sprite = function(key, x, y, frame){
 };
 TinyGame.ObjectFactory.prototype.text = function(x, y, text, size, color){
 	var obj = new TinyGame.Text(this._game, x, y, text, size, color);
-	this._game.text._add(obj);
+	this._game.objects._add(obj);
 	return obj;
 };
 TinyGame.ObjectFactory.prototype.circle = function(){};

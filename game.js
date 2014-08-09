@@ -5,7 +5,7 @@
 var test = {};
 test.PreLoad = {
 	load: function(){
-		// game.load.image('shuriken', "assets/shuriken.png");
+		game.load.image('shuriken', "assets/shuriken.png");
 		game.load.spriteSheet('ninja', "assets/square-ninja.png", 88, 88);
 	},
 	update: function(){
@@ -16,17 +16,20 @@ test.PreLoad = {
 };
 test.Main = {
 	initialize: function(){
-	 	shuriken = game.add.sprite('ninja', 720, 20, 20);
+	 	shuriken = game.add.sprite('shuriken', 720, 20, 20);
 		shuriken.layer = 1;
 
 		ninja = game.add.sprite('ninja', 0, 0);
 		ninja.body.gravity.setY(1);
 		ninja.body.collideBounds = true;
 		ninja.body.velocity.setX(1);
-		ninja.body.bounce.setY(12);
+		ninja.body.bounce.setY(.2);
 
+		// ninja.body.overlap(shuriken, test.Main.NinjaHit);
 
-		shurikenText = this.add.text(shuriken.position.x, shuriken.position.y, shuriken.position.distance(ninja.position), '10pt', "blue");
+		ninja.body.overlap(shuriken, test.Main.NinjaHit);
+
+		shurikenText = game.add.text(shuriken.position.x, shuriken.position.y, shuriken.position.distance(ninja.position), '10pt', "blue");
 
 		ninja.animations.add("walkRight", [0, 1, 2, 3, 4], 15, true);
 		ninja.animations.add("die", [15, 16], 20, false);
@@ -36,7 +39,7 @@ test.Main = {
 	},
 	update: function(){
 
-		test.Main.StarLogic();
+		test.Main.ShurikenLogic();
 
 		shurikenText.position.set(shuriken.position.x, shuriken.position.y);
 		shurikenText.text = Math.floor(shuriken.position.distance(ninja.position));
@@ -44,27 +47,22 @@ test.Main = {
 		//	Debugs stuff OBVIOUSLY
 		test.Main.DebugText();
 	},
-	NinjaDie: function(){
+	NinjaHit: function(ninja, shuriken){
+		test.Main.ShurikenDie();
 		ninja.animations.play("die");
 		ninja.body.velocity.zero();
 		ninja.body.bounce.zero();
 	},
 	// Block logic goes here
-	StarLogic: function(){
+	ShurikenLogic: function(){
 		var distance = shuriken.position.distance(ninja.position);
 		var target = new TinyGame.Vector2(ninja.position.x - shuriken.position.x, ninja.position.y - shuriken.position.y);
 		
-		if(distance > 1){
-			shuriken.body.velocity.set(target.normalize().multiply(3));
-
-							
-		}
-		else{
-			shuriken.body.velocity.zero();
-			test.Main.NinjaDie();
-			shuriken.kill();
-			shurikenText.kill();
-		}
+		shuriken.body.velocity.set(target.normalize().multiply(10));				
+	},
+	ShurikenDie: function(){
+		shuriken.kill();
+		shurikenText.kill();
 	},
 
 	//	DRAW FPS/DELTA TIME
@@ -74,7 +72,6 @@ test.Main = {
 		output.innerHTML = "DeltaTime: " + game.time.delta;
 		output.innerHTML += "<br />FPS: " + game.time.fps;
 		output.innerHTML += "<br />objects: " + game.objects.count();
-		output.innerHTML += "<br />text objects: " + game.text.count();
 	}
 };
 

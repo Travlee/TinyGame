@@ -1,9 +1,10 @@
 //	#TinyGame.GameObject()
 //		-Base Object Class-ish
-TinyGame.GameObject = function(x, y){
+TinyGame.GameObject = function(game, x, y){
+	this._game = game || null;
 	this._type = null;
 	this.position = new TinyGame.Vector2(x || 0, y || 0);
-	this.body = new TinyGame.Body();
+	this.body = new TinyGame.Body(this);
 
 	// this.Anchor = new TinyGame.Vector2(.5, .5); do later, too hard
 	this.layer = 0;
@@ -12,26 +13,7 @@ TinyGame.GameObject.prototype._draw = function(context) {};
 TinyGame.GameObject.prototype._update = function(time) {};
 TinyGame.GameObject.prototype.update = function(time){};
 TinyGame.GameObject.prototype.kill = function(){
-	if(this._type === "TEXT"){
-		this._game.text.remove(this);
-	}
-	else{
-		this._game.objects.remove(this);
-	}
-};
-
-//	TinyGame.Body()
-//
-TinyGame.Body = function(){
-	this.velocity = new TinyGame.Vector2();
-	this.width = 0;
-	this.height = 0;
-	this.radius = 0;
-
-	//	physics
-	this.collideBounds = false;
-	this.gravity = new TinyGame.Vector2();	
-	this.bounce = new TinyGame.Vector2();
+	this._game.objects.remove(this);
 };
 
 //	TinyGame.AnimationManager()
@@ -89,9 +71,8 @@ TinyGame.AnimationManager.prototype.stop = function(){
 //	TinyGame.Sprite()
 //	
 TinyGame.Sprite = function(game, key, x, y, frame){
-	TinyGame.GameObject.call(this, x, y);
-	this._game = game;
-	this._type = TinyGame.TYPES.SPRITE;
+	TinyGame.GameObject.call(this, game, x, y);
+	this._type = TinyGame.types.sprite;
 
 	var ss = this._game._cache._assets[key];
 	if(ss instanceof TinyGame.SpriteSheet){
@@ -127,9 +108,7 @@ TinyGame.Sprite.prototype._draw = function(context, time){
 		context.drawImage(this._image, this.position.x, this.position.y, this.body.width, this.body.height);
 	}
 };
-TinyGame.Sprite.prototype.autoScroll = function(axis, speed){
-
-};
+TinyGame.Sprite.prototype.autoScroll = function(axis, speed){};
 
 // TinyGame.Line()
 //	-do later
@@ -140,8 +119,7 @@ TinyGame.Line.prototype._draw = function(context){};
 //	TinyGame.Text()
 //
 TinyGame.Text = function(game, x, y, text, size, color){
-	TinyGame.GameObject.call(this, x, y);
-	this._game = game;
+	TinyGame.GameObject.call(this, game, x, y);
 	this._type = "TEXT";
 	this.text = text;
 	this.size = size || '20pt';
@@ -158,15 +136,14 @@ TinyGame.Text.prototype._draw = function(context){
 //	TinyGame.Rect()
 //
 TinyGame.Rect = function(game, x, y, width, height, color){
-	TinyGame.GameObject.call(this, x, y);
-	this._game = game;
+	TinyGame.GameObject.call(this, game, x, y);
 	this._type = "RECT";
-	this.width = width || 0;
-	this.height = height || 0;
+	this.body.width = width || 0;
+	this.body.height = height || 0;
 	this.color = color || "black";
 }
 TinyGame.Rect.prototype = Object.create(TinyGame.GameObject.prototype);
 TinyGame.Rect.prototype._draw = function(context){
 	context.fillStyle = this.color;
-	context.fillRect(this.position.x, this.position.y, this.width, this.height);
+	context.fillRect(this.position.x, this.position.y, this.body.width, this.body.height);
 };
