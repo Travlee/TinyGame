@@ -6,7 +6,7 @@ var test = {};
 test.PreLoad = {
 	load: function(){
 		game.load.image('shuriken', "assets/shuriken.png");
-		game.load.spriteSheet('ninja', "assets/square-ninja.png", 88, 88);
+		game.load.spriteSheet('ninja', "assets/square-ninja.png", 72, 72);
 	},
 	update: function(){
 		if(game.load.completed){
@@ -32,7 +32,7 @@ test.Main = {
 		shurikenText = game.add.text(shuriken.position.x, shuriken.position.y, shuriken.position.distance(ninja.position), '10pt', "blue");
 
 		ninja.animations.add("walkRight", [0, 1, 2, 3, 4], 15, true);
-		ninja.animations.add("die", [15, 16], 20, false);
+		ninja.animations.add("die", [7, 8], 20, false);
 		ninja.animations.add("throw", [5, 6], 20, true);
 
 		ninja.animations.play("walkRight");
@@ -56,9 +56,9 @@ test.Main = {
 	// Block logic goes here
 	ShurikenLogic: function(){
 		var distance = shuriken.position.distance(ninja.position);
-		var target = new TinyGame.Vector2(ninja.position.x - shuriken.position.x, ninja.position.y - shuriken.position.y);
+		var target = new TinyGame.Vector2((ninja.position.x + (ninja.body.width/2)) - (shuriken.position.x + (shuriken.body.width/2)), (ninja.position.y + (ninja.body.height/2)) - (shuriken.position.y + (shuriken.body.height/2)));
 		
-		shuriken.body.velocity.set(target.normalize().multiply(10));				
+		shuriken.body.velocity.set(target.normalize().multiply(5));				
 	},
 	ShurikenDie: function(){
 		shuriken.kill();
