@@ -1,69 +1,52 @@
+
 //	#TinyGame.Cache
-//	store all objects in one array
 TinyGame.Cache = function(){
-	this._assets = [];
-	this._pending = 0;
-	this._totalPending = 0;
+	this._Assets = 0;
+	this._Pending = 0;
+	this._Images = [];
+	this._Audio = [];
 };
-TinyGame.Cache.prototype._clear = function(){
-	this._assets = [];
-	this._pending = 0;
-	this._totalPending = 0;	
+TinyGame.Cache.prototype._Clear = function(){
+	this._Assets = 0;
+	this._Pending = 0;
+	this._Images = [];
+	this._Audio = [];
 };
 
 //	#TinyGame.Loader
 TinyGame.Loader = function(game){
-	this._cache = game._cache;
-	this.completed = false;
-	this.progress = 0;
+	this._Cache = game._Cache;
 };
-TinyGame.Loader.prototype._onLoad = function(){
-	this._cache._pending--;
-	if(this._cache._pending === 0){
-		this._cache._totalPending = 0;
-		this.completed = true;
-		this.progress = 100;
-	}
-	else{
-		this.completed = false;
-		this.progress = ((this._cache._totalPending - this._cache._pending) / this._cache._totalPending) * 100;
-	}
+TinyGame.Loader.prototype._OnLoad = function(){
+	this._Cache._Pending--;
 };
-TinyGame.Loader.prototype._onLoadError = function(caller, key){
-	console.error('Error loading', caller, key);
+TinyGame.Loader.prototype._OnLoadError = function(e){
+	//console.error();
+	console.error('Error loading', e);
 };
-TinyGame.Loader.prototype._onSpriteLoad = function(key, image, frame_width, frame_height){
-	this._onLoad.call(this);
-	this._cache._assets[key] = new TinyGame.SpriteSheet(image, frame_width, frame_height);
+TinyGame.Loader.prototype.Progress = function(){
+	if(this._Cache._Pending === 0) return 100;
+	var percent = ((this._Cache._Assets - this._Cache._Pending) / this._Cache._Assets) * 100;
+	return percent;
 };
-TinyGame.Loader.prototype._onImageLoad = function(key, img){
-	this._onLoad.call(this);
-	this._cache._assets[key] = img;
+TinyGame.Loader.prototype.Completed = function(){
+	if(this._Cache._Pending === 0) return true;
+	return false;
 };
-TinyGame.Loader.prototype._onAudioLoad = function(key, audio){
-	this._onLoad.call(this);
-	this._cache._assets[key] = audio;
+TinyGame.Loader.prototype.Image = function(name, image_file){
+	this._Cache._Assets++;
+	this._Cache._Pending++;
+	this._Cache._Images[name] = new Image();
+	this._Cache._Images[name].onload = this._OnLoad.bind(this);
+	this._Cache._Images[name].src = image_file;
+	this._Cache._Images[name].onerror = this._OnLoadError.bind(this, name);
 };
-TinyGame.Loader.prototype.image = function(key, img){
-	this._cache._totalPending++;
-	this._cache._pending++;
-	var image = new Image();
-	image.src = img;
-	image.onerror = this._onLoadError.bind(this, key);
-	image.onload = this._onImageLoad.bind(this, key, image);
+TinyGame.Loader.prototype.Audio = function(name, audio_file){
+	this._Cache._Assets++;
+	this._Cache._Pending++;
+	this._Cache._Audio[name] = new Audio(audio_file);
+	this._Cache._Audio[name].oncanplaythrough = this._OnLoad.bind(this);
+
+	//this._Cache.Audio[name].onerror = this._OnLoadError.bind(this);
 };
-TinyGame.Loader.prototype.spriteSheet = function(key, img, frame_width, frame_height){
-	this._cache._totalPending++;
-	this._cache._pending++;
-	var image = new Image();
-	image.src = img;
-	image.onerror = this._onLoadError.bind(this, "spriteSheet", key);
-	image.onload = this._onSpriteLoad.bind(this, key, image, frame_width, frame_height);
-};
-TinyGame.Loader.prototype.audio = function(key, audio_file){
-	this._cache._pending++;
-	this._cache._totalPending++;
-	var audio = new Audio(audio_file);
-	audio.oncanplaythrough = this._onAudioLoad.bind(this, key, audio);
-	//audio.onerror = this._OnLoadError.bind(this);
-};
+//  Add in a sprite cache type, so you can add animations straight to the cache; Maybe?

@@ -2,50 +2,50 @@
 //	#TinyGame.StateHandler
 //		
 TinyGame.StateHandler = function(game, states, default_state){
-	this._game = game || this;
-	this._cache = game._cache;
+	this._Game = game || this;
+	this._Cache = game._Cache;
 
-	this._bootCompleted = false;
-	this._pendingActive = null;
-	this._states = [];
+	this._BootCompleted = false;
+	this._PendingActive = null;
+	this._States = [];
 	
-	this.active = {
-		state: null,
+	this.Active = {
+		State: null,
 
-		_loaded: false,
-		_loading: false,
-		_initialized: false,
+		_Loaded: false,
+		_Loading: false,
+		_Initialized: false,
 
-		_onLoad: null,
-		_onInitialize: null,
-		_onUpdate: null,
-		_onDraw: null,
-		_onPostDraw: null,
-		_onDie: null
+		_OnLoad: null,
+		_OnInitialize: null,
+		_OnUpdate: null,
+		_OnDraw: null,
+		_OnPostDraw: null,
+		_OnDie: null
 	};
 
-	this._parseStates(states);
-	if(default_state) this._pendingActive = default_state;
+	this._ParseStates(states);
+	if(default_state) this._PendingActive = default_state;
 };
-TinyGame.StateHandler.prototype._boot = function(){
-	this._bootCompleted = true;
-	this._setActive(this._pendingActive);
+TinyGame.StateHandler.prototype._Boot = function(){
+	this._BootCompleted = true;
+	this._SetActive(this._PendingActive);
 };
-TinyGame.StateHandler.prototype._parseStates = function(states){
+TinyGame.StateHandler.prototype._ParseStates = function(states){
 	for(var state in states){
 		if(typeof states[state] === 'object'){
-			this.add(state, states[state]);
+			this.Add(state, states[state]);
 		}
 		else
 		{
-			this.add('Default', states);
-			this._pendingActive = 'Default';
+			this.Add('Default', states);
+			this._PendingActive = 'Default';
 			break;
 		}
 	}
 };
-TinyGame.StateHandler.prototype._validState = function(state){
-	if(this._states[state]) return true;
+TinyGame.StateHandler.prototype._ValidState = function(state){
+	if(this._States[state]) return true;
 
 	var valid = true;
 	for(var obj in state){
@@ -53,106 +53,106 @@ TinyGame.StateHandler.prototype._validState = function(state){
 	}
 	return valid;
 };
-TinyGame.StateHandler.prototype._update = function(){
-	if(!this.active.state) return;
+TinyGame.StateHandler.prototype._Update = function(){
+	if(!this.Active.State) return;
 	
 	//	Calls Load once, if exists
-	if(this.active._onLoad && !this.active._loaded){
-		this.active._onLoad();
-		this.active._loaded = true;
+	if(this.Active._OnLoad && !this.Active._Loaded){
+		this.Active._OnLoad();
+		this.Active._Loaded = true;
 	}
 	//	Calls Initialize once, if exists
-	if(this.active._onInitialize && !this.active._initialized){
-		this.active._onInitialize();
-		this.active._initialized = true;
+	if(this.Active._OnInitialize && !this.Active._Initialized){
+		this.Active._OnInitialize();
+		this.Active._Initialized = true;
 	}
 
-	this._updateActive();
-	this._drawActive();
+	this._UpdateActive();
+	this._DrawActive();
 };
-TinyGame.StateHandler.prototype._addState = function(name, state, start){
-	this._states[name] = new TinyGame.State(state);
-	if(start) this._setActive(name);
+TinyGame.StateHandler.prototype._AddState = function(name, state, start){
+	this._States[name] = new TinyGame.State(state);
+	if(start) this._SetActive(name);
 };
 
 
 //	Active State Methods ####
 //	NOT INTENDED FOR PERSONAL USE!
-TinyGame.StateHandler.prototype._setActive = function(state){
+TinyGame.StateHandler.prototype._SetActive = function(state){
 	
 	//	Kills Last State Gracefully
-	this._killActive();
+	this._KillActive();
 	//	Sets Up New Active
-	this._linkActive(state);
+	this._LinkActive(state);
 
 	//	DEBUG TEXT
 	console.log("ACTIVE STATE:", "'" + state + "'");
 };	
-TinyGame.StateHandler.prototype._linkActive = function(state){
-	if(!this._states[state]) return;	
+TinyGame.StateHandler.prototype._LinkActive = function(state){
+	if(!this._States[state]) return;	
 
-	var newState = this._states[state];
+	var newState = this._States[state];
 
-	this.active.state = state;
-	this.active._loaded = false;
+	this.Active.State = state;
+	this.Active._Loaded = false;
 	//this.Active._Loading = false;
-	this.active._initialized = false;
+	this.Active._Initialized = false;
 
-	this.active._onLoad = newState._load ? newState._load.bind(this._game) : null;
-	this.active._onInitialize = newState._initialize ? newState._initialize.bind(this._game) : null;
-	this.active._onUpdate = newState._update ? newState._update.bind(this._game) : null;
-	this.active._onDraw = newState._draw ? newState._draw.bind(this._game) : null;
-	this.active._onDie = newState._die ? newState._die.bind(this._game) : null;
+	this.Active._OnLoad = newState._Load ? newState._Load.bind(this._Game) : null;
+	this.Active._OnInitialize = newState._Initialize ? newState._Initialize.bind(this._Game) : null;
+	this.Active._OnUpdate = newState._Update ? newState._Update.bind(this._Game) : null;
+	this.Active._OnDraw = newState._Draw ? newState._Draw.bind(this._Game) : null;
+	this.Active._OnDie = newState._Die ? newState._Die.bind(this._Game) : null;
 };
-TinyGame.StateHandler.prototype._updateActive = function(){
-	if(!this.active._onUpdate) return;
-	this.active._onUpdate();
+TinyGame.StateHandler.prototype._UpdateActive = function(){
+	if(!this.Active._OnUpdate) return;
+	this.Active._OnUpdate();
 };
-TinyGame.StateHandler.prototype._drawActive = function(){
-	if(!this.active._onDraw) return;
-	this.active._onDraw();
+TinyGame.StateHandler.prototype._DrawActive = function(){
+	if(!this.Active._OnDraw) return;
+	this.Active._OnDraw();
 
 	//	Do POST DRAW CALLS HERE OR SOMETHING
 	/*if(!this.Active._OnPostDraw) return;
 	this.Active._OnPostDraw();*/
 };
-TinyGame.StateHandler.prototype._killActive = function(){
-	if(this.active.state === null) return;
-	if(this.active._onDie) this.active._onDie();
+TinyGame.StateHandler.prototype._KillActive = function(){
+	if(this.Active.State === null) return;
+	if(this.Active._OnDie) this.Active._OnDie();
 
 	//	Debug Text
-	console.log("	KILLED STATE:", "'" + this.active.state + "'");
+	console.log("	KILLED STATE:", "'" + this.Active.State + "'");
 };
 //	#########################
 
 
-TinyGame.StateHandler.prototype.add = function(name, state, start){
-	if(!this._validState(state)){
+TinyGame.StateHandler.prototype.Add = function(name, state, start){
+	if(!this._ValidState(state)){
 		console.error('TinyGame.STATEHANDLER.ADD: INVALID STATE OBJECT ', state);
 		return;
 	}
-	this._states[name] = new TinyGame.State(state);
-	if(start) this._setActive(name);
+	this._States[name] = new TinyGame.State(state);
+	if(start) this._SetActive(name);
 };
-TinyGame.StateHandler.prototype.start = function(state){
-	if(!this._bootCompleted){
-		this._pendingActive = state;
+TinyGame.StateHandler.prototype.Start = function(state){
+	if(!this._BootCompleted){
+		this._PendingActive = state;
 		return;
 	}
-	if(!this._validState(state)) {
+	if(!this._ValidState(state)) {
 		console.error("TinyGame.StateHandler.Start: INVALID STATE '" + state + "'");
 		return;
 	}
 
-	this._setActive(state);	
+	this._SetActive(state);	
 };
 
 //	#TinyGame.State
 TinyGame.State = function(state){
-	this._load = state.load || null;
-	this._initialize = state.initialize || null;
-	this._update = state.update || null;
-	this._draw = state.draw || null;
-	this._postDraw = null;
-	this._die = state.die || null;
+	this._Load = state.Load || null;
+	this._Initialize = state.Initialize || null;
+	this._Update = state.Update || null;
+	this._Draw = state.Draw || null;
+	this._PostDraw = null;
+	this._Die = state.Die || null;
 };

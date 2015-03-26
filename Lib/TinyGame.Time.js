@@ -2,27 +2,25 @@
 // #TinyGame.Time()
 TinyGame.Time = function(){
 
-	//	DONT LOOK AT ME DAMNIT, IM NAKED:
-	this._startTime = new Date().getTime();
-	this._last = 0;
-	this._lastCheck = 0;
+	//	DONT LOOK AT ME DAMNIT, IM NAKED
+	this._StartTime = new Date().getTime();
+	this._Last = 0;
+	this._LastCheck = 0;
 
-	//	Public:
-	this.gameTime = 0;
-	this.delta = 0;
-	this.seconds = 0;
-	this.fps = 0;
+	//	Public Members
+	this.Delta = 0;
+	this.Seconds = 0;
+	this.FPS = 0;
 };
-TinyGame.Time.prototype._update = function(time){
-	this.gameTime = time;
-	this.delta = time - this._last || 0;
-	this.seconds = Math.floor(time / 1000);
-	this._fps(time);
-	this._last = time;
+TinyGame.Time.prototype._Update = function(time){
+	this.Delta = time - this._Last || 0;
+	this.Seconds = Math.floor(time / 1000);
+	this._FPS(time);
+	this._Last = time;
 };
-TinyGame.Time.prototype._fps = function(time){
-	if((time - this._lastCheck) > 200){
-		this.fps = Math.floor(1000/this.delta);
-		this._lastCheck = time;
+TinyGame.Time.prototype._FPS = function(time){
+	if((time - this._LastCheck) > 200){
+		this.FPS = Math.floor(1000/this.Delta);
+		this._LastCheck = time;
 	}
 };

@@ -1,30 +1,22 @@
-
-//	OLD - must rework sometime, maybe
 TinyGame.Input = function(game){
-	this._game = game;
-	this._keys = {
-		Backspace:8,
-		Enter:13,
-		Space:32,
-		LeftArrow:37,
-		UpArrow:38,
-		RightArrow:39,
-		DownArrow:40,
-		A:65,
-		D:68,
-		S:83,
-		W:87
+	var self = this;
+	this.Game = game;
+	this.keysDown = [];
+
+	this.Get = function(key){
+		if(this.keysDown[key] != undefined)
+		{
+			return true;
+		}
+		return false
 	};
-
-	this.enableKeys = false;
-	this.enableMouse = false;
+	this.Remove = function(key){
+		delete self.keysDown[key];
+	};
+	this.KeyDown = function(e){
+		self.keysDown[e.keyCode] = true;
+	};
+	this.KeyUp = function(e){
+		delete self.keysDown[e.keyCode];
+	};
 };
-TinyGame.Input.prototype.add = function(key, callback){
-	// document.addEventListener(key, );
-};
-TinyGame.Input.prototype._update = function(){
-
-};
-TinyGame.Input.prototype._keyDown = function(){};
-TinyGame.Input.prototype._keyUp = function(){};
-TinyGame.Input.prototype._mouseDown = function(){};

@@ -1,78 +1,79 @@
 
 //	#### GameObject Info ####
-//	- havent decided yet
+//	So, your gameobject can include a Load callback, OnLoading state, and as many other states 
+//	your game may need. Load/OnLoading are optional.
+//	It can also be as simple as Load/Initialize/Update and Draw callbacks 
 
 var test = {};
 test.PreLoad = {
-	load: function(){
-		game.load.image('shuriken', "assets/shuriken.png");
-		game.load.spriteSheet('ninja', "assets/square-ninja.png", 72, 72);
-	},
-	update: function(){
-		if(game.load.completed){
-			game.states.start('Main');
-		}
-	}
+    Load: function () {
+        game.Load.Image("Ninja", "assets/squareNinja.png");
+    },
+    Update: function () {
+        if (game.Load.Completed()) {
+            game.States.Start('Main');
+        }
+    }
 };
 test.Main = {
-	initialize: function(){
-	 	shuriken = game.add.sprite('shuriken', 720, 20, 20);
-		shuriken.layer = 1;
+    Initialize: function () {
 
-		ninja = game.add.sprite('ninja', 0, 0);
-		ninja.body.gravity.setY(1);
-		ninja.body.collideBounds = true;
-		ninja.body.velocity.setX(1);
-		ninja.body.bounce.setY(.2);
+        game.World.EnableBounds = true;
 
-		// ninja.body.overlap(shuriken, test.Main.NinjaHit);
+        block = game.Add.Rect(740, 3, 50, 50, 'green');
+        block.Gravity.Y = .2;
+        blockTwo = game.Add.Rect(200, 3, 50, 50, 'blue');
+        
 
-		ninja.body.overlap(shuriken, test.Main.NinjaHit);
+        ninja = game.Add.Sprite('Ninja', 50, 50, 88, 88, { x: 0, y: 0, width: 88, height: 88 });
+        ninja.Gravity.Y = .6;
+        ninja.Velocity.X = .2;
+        game.World.Collisions.Add(ninja, [block, blockTwo], test.Main.NinjaImpact);
+        
 
-		shurikenText = game.add.text(shuriken.position.x, shuriken.position.y, shuriken.position.distance(ninja.position), '10pt', "blue");
+        blockText = this.Add.Text(block.Position.X, block.Position.Y, block.Distance(ninja), '10pt', "blue");
 
-		ninja.animations.add("walkRight", [0, 1, 2, 3, 4], 15, true);
-		ninja.animations.add("die", [7, 8], 20, false);
-		ninja.animations.add("throw", [5, 6], 20, true);
+        //  still havent implemented working animations - pls fix
+        ninja.Animations.Add("walk_right", { x: 0, y: 0, width: 88, height: 88, frames: 5 });
 
-		ninja.animations.play("walkRight");
-	},
-	update: function(){
+        ninja.Animations.Play("walk_right");
 
-		test.Main.ShurikenLogic();
+    },
+    Update: function () {
 
-		shurikenText.position.set(shuriken.position.x, shuriken.position.y);
-		shurikenText.text = Math.floor(shuriken.position.distance(ninja.position));
+        test.Main.BlockLogic();
 
-		//	Debugs stuff OBVIOUSLY
-		test.Main.DebugText();
-	},
-	NinjaHit: function(ninja, shuriken){
-		test.Main.ShurikenDie();
-		ninja.animations.play("die");
-		ninja.body.velocity.zero();
-		ninja.body.bounce.zero();
-	},
-	// Block logic goes here
-	ShurikenLogic: function(){
-		var distance = shuriken.position.distance(ninja.position);
-		var target = new TinyGame.Vector2((ninja.position.x + (ninja.body.width/2)) - (shuriken.position.x + (shuriken.body.width/2)), (ninja.position.y + (ninja.body.height/2)) - (shuriken.position.y + (shuriken.body.height/2)));
-		
-		shuriken.body.velocity.set(target.normalize().multiply(5));				
-	},
-	ShurikenDie: function(){
-		shuriken.kill();
-		shurikenText.kill();
-	},
+        blockText.Position.X = block.Position.X;
+        blockText.Position.Y = block.Position.Y - 1;
+        blockText.Text = Math.round(block.Distance(ninja));
 
-	//	DRAW FPS/DELTA TIME
-	DebugText: function(){
-		//	Debug Stuffs
-		var output = document.getElementById('debug_stuffs');
-		output.innerHTML = "DeltaTime: " + game.time.delta;
-		output.innerHTML += "<br />FPS: " + game.time.fps;
-		output.innerHTML += "<br />objects: " + game.objects.count();
-	}
+        //	Debugs stuff OBVIOUSLY
+        test.Main.DebugText();
+    },
+    // Block logic goes here
+    BlockLogic: function () {
+
+
+        // Moves the blockTwo to Ninja
+        blockTwo.MoveTo(ninja, 3);
+
+        // Moves block to ninja
+        block.MoveTo(ninja, .5);
+    },
+
+    //	DRAW FPS/DELTA TIME
+    DebugText: function () {
+        //	Debug Stuffs
+        var output = document.getElementById('debug_stuffs');
+        output.innerHTML = "DeltaTime: " + game.Time.Delta;
+        output.innerHTML += "<br />FPS: " + game.Time.FPS;
+        output.innerHTML += "<br />objects: " + game.Objects.Count();
+        output.innerHTML += "<br />NINJA - BLOCK: " + block.Distance(ninja);
+        //output.innerHTML += "<br />BLOCK to NINJA: (x: " + Math.round(target.X) + ", y: " + Math.round(target.Y) + ")";
+    },
+    NinjaImpact: function () {
+        console.log("Ninja Hit");
+    }
 };
 
 
@@ -80,4 +81,8 @@ var game = new TinyGame.Game(800, 500, 'container', test, 'PreLoad');
 
 
 /*	Nonsense down here ##################################################################
+
+
+
+
 */

@@ -1,5 +1,9 @@
-TinyGame.js
-===========
+=========================================
+TinyGame- Html5 Game Framework for Canvas
+	- By Lee
+	- lee@Tinyroosters.com
+	- www.Github.com\TravLee
+=========================================
 
 HTML5 Canvas game framework
 

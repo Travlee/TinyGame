@@ -1,83 +1,104 @@
 
-//	TinyGame Html5 Game Framework
-//		-by TravLee
+//	TinyGame Framework
+//		-Requires TinyCanvas Library
+//		-by Lee
+//	HELP STUFF
+//		- If there's an underscore in a variable/method's name, you probably dont need to fuck with it.
+
 (function(){
 	if(window.requestAnimationFrame === 'undefined'){
 		alert("Game Loop Issues Because I'm Lazy.");
 		console.error("Game loop issues because I'm lazy.");
 	}
+	/*if(){
+
+	}*/
 })();
+
+//	#TinyGame(width, height, parent_id, states, default_state)
+//		-width {INTEGER, REQUIRED}: 
+//			canvas width
+//		-height {INTEGER, REQUIRED}: 
+//			canvas height
+//		-parent_id {STRING, OPTIONAL = ''}: 
+//			id of parent_div to store the canvas object, or empty string
+//		-states {OBJECT, REQUIRED}: 
+//			STATE-OBJECT = {Load: Callback, Initialize: callback, ...}
+//				-Require: Load/Update/Draw Callbacks
+//				-Possible States(In Order): Load/Initialize/Update/Draw/Die 
+//			ex. {Load: load, Initialize: init, Update: update, Draw: draw}
+//			ex. var MyGame = {Menu: STATE-OBJECT, LevelOne: STATE-OBJECT, Pause: STATE-OBJECT, ...};
+//		-default_state (STRING, OPTIONAL-ISH*)
+//			Required if passing in an object filled with states, or nothing will run by default
+
 var TinyGame = {
-	types: {
-		sprite: "SPRITE",
-		text:"TEXT",
-		rect:"RECT",
-		circle:"CIRCLE"
-	}
+	Version: 0
 };
-
-TinyGame.SpriteSheet = function(image, frameWidth, frameHeight){
-	this.image = image || null;
-	this.width = image.width;
-	this.height = image.height;
-	this.fWidth = frameWidth || null;
-	this.fHeight = frameHeight || null;
-
-	this.frames = [];
-
-	for(var i=0, frame=0, yLen=this.height/this.fHeight; i<yLen; i++){
-		for(var ii=0, x=0, y=0, xLen=this.width/this.fWidth; ii<xLen; ii++, frame++){
-			x = ii*this.fWidth;
-			y = i*this.fHeight;
-			this.frames[frame] = {x:x, y:y};
-		}
-	}		
-};
-
-
-
-//	TinyGame.Canvas() - Object
-TinyGame.Canvas = function(width, height, parent_id, id){
-	var canvas = document.createElement('canvas');
-	canvas.id = id || 'TinyCanvas-Canvas-Canvas';
-	canvas.width = width;
-	canvas.height = height;
-	if(!parent_id) { document.body.appendChild(canvas); }
-	else { document.getElementById(parent_id).appendChild(canvas); }
-	return canvas;
-};
-
-//	#TinyCanvas.RequestAnimationFrame(context || null, callback) 
-TinyGame.RequestAnimationFrame = function(context, callback){
+TinyGame.Game = function(width, height, parent_id, states, default_state){
 	
-	// Polyfill for window.Raf not done
-    (function(){
-    	window.requestAnimationFrame = window.requestAnimationFrame 
-    								|| window.mozRequestAnimationFrame 
-    								|| window.webkitRequestAnimationFrame 
-    								|| window.msRequestAnimationFrame;
-    })();
+	// Status Stuff
+	this._BootCompleted = false;
+	this._IsRunning = false;
+	this._Paused = false;
 
-	this.startId = null;
-	this.running = false;
-	this.callback = callback.bind(context || this);
-    this._raf = true;
+	// Private Stuffs
+	this._Cache = null; 
 
-    var self = this;
-    this.loop = function(time){
-    	if(!self.running) return;
-    	self.callback(time);
-		self.startId = window.requestAnimationFrame(self.loop);
-    };
-};
-TinyGame.RequestAnimationFrame.prototype = {
-	start: function(){
-		this.running = true;
-		this.loop();
-	},
-	stop: function(){
-		window.cancelAnimationFrame(this.startId);
-		this.running = false;
+	// Settings stuff
+	//this.EnableFPS = true;	DONT KNOW YET...
+	//this.EnableStepping = false;    // Also doesn't exist yet
+
+	// Public Objects
+	this.Time = null;
+	this.FPS = null;
+	this.Add = null;
+	this.Load = null;
+	this.Objects = null;
+	//this.Rand = null;
+	//this.Input = null; 
+	this.Math = null;
+	this.Scene = new TinyGame.Scene(this, width, height, parent_id, 'white');
+	this.States = new TinyGame.StateHandler(this, states || null, default_state || null);
+	this.World = null;
+	
+	if(document.readyState === 'complete' || document.readyState === 'interactive'){
+		this._Boot();
 	}
-};
+	else{
+		var self = this;
+		document.addEventListener('DOMContentLoaded', function(){self._Boot();}, false);		
+	}
+}
+//  TinyGame.game._Boot() - Private
+//      - Caller: EventListener; DOMContentLoaded
+//      - Returns: Not shit
+TinyGame.Game.prototype._Boot = function(){
+	if(this._BootCompleted) return;
+	this._BootCompleted = true;
+	document.removeEventListener('DOMContentLoaded', this._Boot);
+	
+	this._Cache = new TinyGame.Cache();
+	this.Add = new TinyGame.ObjectFactory(this);
+	this.Time = new TinyGame.Time();
+	this.Load = new TinyGame.Loader(this);
+	this.Objects = new TinyGame.ObjectsHandler(this);
+	this.Math = TinyGame.Math;
+	this.Scene._Boot();
+	this.World = new TinyGame.World(this);
+	this.States._Boot();
 
+	this.Raf = new TinyGame.RequestAnimationFrame(this, this._Run);
+	this.Raf.Start();
+};
+TinyGame.Game.prototype._Run = function(time){
+	if(!this._IsRunning) this._IsRunning = true;
+
+	//	Game Loop Stuffs
+	this.Time._Update(time);
+	this.States._Update();
+	this.Scene._Update();
+	this.World._Update();
+	
+
+	//	Debug Stuffs
+};
