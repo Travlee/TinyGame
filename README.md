@@ -1,6 +1,5 @@
-# TinyGame
-## HTML5 - Canvas Game Framework
+# TinyGame - HTML5 Canvas Game Framework
+-----
 - By Lee
 - www.Github.com\TravLee
 - Spritesheet from [Korba™ @ OpenGameArt.org](http://opengameart.org/users/korba%E2%84%A2)
------
