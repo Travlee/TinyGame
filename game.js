@@ -21,15 +21,17 @@ test.Main = {
         game.World.EnableBounds = true;
 
         block = game.Add.Rect(740, 3, 50, 50, 'green');
-        block.Gravity.Y = .2;
-        blockTwo = game.Add.Rect(200, 3, 50, 50, 'blue');
+        //block.Gravity.Y = .2;
+        //blockTwo = game.Add.Rect(200, 3, 50, 50, 'blue');
         
 
         ninja = game.Add.Sprite('Ninja', 50, 50, 88, 88, { x: 0, y: 0, width: 88, height: 88 });
         ninja.Gravity.Y = .6;
         ninja.Velocity.X = .2;
-        game.World.Collisions.Add(ninja, [block, blockTwo], test.Main.NinjaImpact);
-        
+        game.World.Collisions.Add(ninja, [block], test.Main.NinjaImpact);
+        block.MoveTo(ninja, 10);
+        //blockTwo.MoveTo([700, 200], 8);
+
 
         blockText = this.Add.Text(block.Position.X, block.Position.Y, block.Distance(ninja), '10pt', "blue");
 
@@ -55,10 +57,10 @@ test.Main = {
 
 
         // Moves the blockTwo to Ninja
-        blockTwo.MoveTo(ninja, 3);
+        //blockTwo.MoveTo(ninja, 3);
 
         // Moves block to ninja
-        block.MoveTo(ninja, .5);
+        //block.MoveTo(ninja, .5);
     },
 
     //	DRAW FPS/DELTA TIME

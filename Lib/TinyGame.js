@@ -15,6 +15,9 @@
 	}*/
 })();
 
+var TinyGame = {
+	Version: 0
+};
 //	#TinyGame(width, height, parent_id, states, default_state)
 //		-width {INTEGER, REQUIRED}: 
 //			canvas width
@@ -30,10 +33,6 @@
 //			ex. var MyGame = {Menu: STATE-OBJECT, LevelOne: STATE-OBJECT, Pause: STATE-OBJECT, ...};
 //		-default_state (STRING, OPTIONAL-ISH*)
 //			Required if passing in an object filled with states, or nothing will run by default
-
-var TinyGame = {
-	Version: 0
-};
 TinyGame.Game = function(width, height, parent_id, states, default_state){
 	
 	// Status Stuff

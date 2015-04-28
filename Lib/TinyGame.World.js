@@ -7,7 +7,7 @@ TinyGame.World = function(game){
 	this.Collisions = new TinyGame.Collisions(game);
 	this.EnableBounds = false;
 
-    // MoveTo Object Queue
+    // MoveTo Object Queue - [Inactive]
 	this._MoveQueue = [];
 
 };
@@ -24,17 +24,8 @@ TinyGame.World.prototype._Update = function(){
     //  performance things
 	if (this.EnableBounds) this._BoundsCheck();
 	this.Collisions._Update();
-	this._UpdateObjects();
 
 	
-};
-
-//  TinyGame.World._UpdateMoves() <Private>
-//  NOT USING ATM PROBABLY EVERY!
-TinyGame.World.prototype._UpdateObjects = function () {
-    for (var obj in this._Game.Objects._Object) {
-        this._Game.Objects._Objects[obj]._Update();
-    }
 };
 
 //	TinyGame.World._Physics() <Private>
@@ -43,6 +34,9 @@ TinyGame.World.prototype._UpdateObjects = function () {
 TinyGame.World.prototype._Physics = function(){
 	for(var i=0, len=this._Game.Objects._Objects.length; i<len; i++){
 	    var obj = this._Game.Objects._Objects[i];
+
+	    //  Call each Object's _Update method
+	    obj._Update();
 
 	    //	Adds Gravity to Velocity each update
 		obj.Velocity.Add(obj.Gravity);

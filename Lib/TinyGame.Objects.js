@@ -1,6 +1,11 @@
 
 //	#TinyGame.BaseObject()
 //		-Base Object Class-ish
+/**
+ * [BaseObject description]
+ * @param {[type]} x [description]
+ * @param {[type]} y [description]
+ */
 TinyGame.BaseObject = function (x, y) {
     this._Type = null;
     this._ID = 0;
@@ -8,27 +13,73 @@ TinyGame.BaseObject = function (x, y) {
     this.Velocity = new TinyGame.Vector2d(0, 0);
     this.Gravity = new TinyGame.Vector2d(0, 0);
 
-    //  Variables for MoveTo Method
-    this._Destination = new TinyGame.Vector2d();
+    //  Vision vector for line-of-sight checks; Not used yet
+    this.Vision = new TinyGame.Vector2d();
+
+    //  Variables for Move Methods
+    this._Move = {
+        _Pending: false,
+        _Destination: new TinyGame.Vector2d(),
+        _Speed: null
+    };
+    
 
     this.zIndex = 0;
 };
 TinyGame.BaseObject.prototype._Draw = function (context) { };
 
 //  TinyGame.BaseObject._Update() <Private>
+//      - Caller: TinyGame.World._Update()
 //      - Notes: Used for the MoveTo method, allows for calling MoveTo() once, 
 //              and still having the object move.
+//              Issues with large speeds, causing the object to 'bounce' back and forth,
+//              near the destination. Need to add some math to check the differences with applied.
+//              However I'm retarded and can't think up a solution yet. Pls fix.
 TinyGame.BaseObject.prototype._Update = function () {
-    console.log("test");
+
+    //  Handles the Move Commands
+    if (this._Move._Pending) {
+        
+        var target = new TinyGame.Vector2d(),
+            xDifference = this._Move._Destination.X - this.Position.X,
+            yDifference = this._Move._Destination.Y - this.Position.Y;
+
+        target.Set(xDifference, yDifference);
+
+        //  Checks the difference for both x/y, if greater than 1 applies the normal vector to velocity.
+        //  If not, then resets this._Move vars 
+        if (this.Position.X !== this._Move._Destination.X) {
+            var destination = this._Move._Destination, speed = this._Move._Speed;
+            console.log(destination);
+            target.Set(target.Normal().Multiply(speed));
+            if ((Math.abs(xDifference) - target.X) < 0) {
+                target.X = 0;
+                //this.Position.X = this._Move._Destination.X;
+                //console.log(this.Position.X);
+            } 
+            if ((Math.abs(yDifference) - target.Y) < 0) {
+                target.Y = 0;
+                this.Position.Y = this._Move._Destination.Y;
+                //console.log(this.Position.Y);
+            }
+            this.Velocity.Set(target);
+        } else {
+            console.log('GOAL');
+            this._Move._Pending = false;
+            this._Move._Destination.Zero();
+            this._Move._Speed = null;
+        }
+    }
 };
 
 //  TinyGame.BaseObject._GetID
-//        - Returns: Self._ID
+//      - Returns: Self._ID
+//      - Notes: Probably retarded, and redundant, and retarded.
 TinyGame.BaseObject.prototype._GetID = function () {
     return this._ID;
 };
 
-//  TinyGame.BaseObject.CollidedWith(obj) <Public>
+//  TinyGame.BaseObject.CollidedWith(obj) <Public> [Not Used]
 //      - Caller: TinyGame.Collisions;
 //      - Args: the object(s) colliding with
 //      - Notes: Extendable event tiggered when a collision is found between objects specified
@@ -63,7 +114,7 @@ TinyGame.BaseObject.prototype.Distance = function (obj) {
 //              call the public method each update. The Engine needs to handle this nonsense.
 //              Another thought, the target velocity vector should be added to the current velocity,
 //              instead of overriding and replacing.
-TinyGame.BaseObject.prototype.MoveTo = function (destination, speed) {
+TinyGame.BaseObject.prototype._BAKMoveTo = function (destination, speed) {
 
     //  Initalizes a new local TinyGame.Vector2d object
     var target = new TinyGame.Vector2d();
@@ -86,7 +137,7 @@ TinyGame.BaseObject.prototype.MoveTo = function (destination, speed) {
         //  Not sure if thats the solution im looking for or not. I'm simply hoping to achieve
         //  instead of setting the velocity, here, add on to the velocity applied by the
         //  physics engine for gravity. Pls baby jebus, send me a sign.
-        this.Velocity.Add(target.Normalize().Multiply(speed));
+        this.Velocity.Add(target.Normal().Multiply(speed));
     } else {
         
         //  no Speed
@@ -99,44 +150,35 @@ TinyGame.BaseObject.prototype.MoveTo = function (destination, speed) {
 
 };
 
-TinyGame.BaseObject.prototype._MoveTo = function (destination, speed) {
+TinyGame.BaseObject.prototype.MoveTo = function (destination, speed) {
+
     //  Initalizes a new local TinyGame.Vector2d object
     var target = new TinyGame.Vector2d();
 
     //  Sets target vector to destination
     if (destination instanceof TinyGame.BaseObject) {
-        target.Set(destination.Position)
+        target.Set(destination.Position);
     } else {
-        target.Set(destination[0], destination[1])
+        target.Set(destination[0], destination[1]);
     }
 
-    //  Moves the object at specified speed
-    if (speed) {
-        target.X = destination.Position.X - this.Position.X;
-        target.Y = destination.Position.Y - this.Position.Y;
-        //this.Velocity.Set(target.Normalize().Multiply(speed));
-
-        //  This makes shit pretty cool-like. However, need to change the order of 
-        //  applying gravity/velocity in the world.physics updates, and seting the velocity here.
-        //  Not sure if thats the solution im looking for or not. I'm simply hoping to achieve
-        //  instead of setting the velocity, here, add on to the velocity applied by the
-        //  physics engine for gravity. Pls baby jebus, send me a sign.
-        this.Velocity.Add(target.Normalize().Multiply(speed));
+    if (!speed) {
+        this.Position.Set(target);
     } else {
-
-        //  no Speed
-        if (destination instanceof TinyGame.BaseObject) {
-            this.Position.Set(target);
-        } else {
-            this.Position.Set(target.X, target.Y)
-        }
+        this._Move._Pending = true
+        this._Move._Destination = target;
+        this._Move._Speed = speed;
     }
 };
 
 
+//  TinyGame.BaseObject.Track <Public>
+//      - Notes: Continuiously follows the object specified.
+TinyGame.BaseObject.prototype.Track = function (obj) { };
+
 //  TinyGame.BaseObject.PathTo <Public>
 //      - Notes: Path finding method, one day im sure i'll make this a reality.
-TinyGame.BaseObject.prototype.PathTo = function () {};
+TinyGame.BaseObject.prototype.PathTo = function () { };
 
 
 
