@@ -69,7 +69,7 @@ TinyGame.Game = function(width, height, parent_id, states, default_state){
 	}
 }
 //  TinyGame.game._Boot() - Private
-//      - Caller: EventListener; DOMContentLoaded
+//      - Caller: EventListener->DOMContentLoaded
 //      - Returns: Not shit
 TinyGame.Game.prototype._Boot = function(){
 	if(this._BootCompleted) return;

@@ -44,14 +44,20 @@ TinyGame.StateHandler.prototype._ParseStates = function(states){
 		}
 	}
 };
+
+//	Added a typeof: 'object' check along with 'function' to allow for custom
+//		props/objects to be added to state::objects in addition to state::methods.
 TinyGame.StateHandler.prototype._ValidState = function(state){
 	if(this._States[state]) return true;
 
-	var valid = true;
 	for(var obj in state){
-		if(typeof state[obj] !== 'function') valid = false;
+		if(typeof state[obj] === 'function' || typeof state[obj] === 'object'){ 
+			console.log(state[obj]);
+
+			return true;
+		}
 	}
-	return valid;
+	return false;
 };
 TinyGame.StateHandler.prototype._Update = function(){
 	if(!this.Active.State) return;
@@ -137,11 +143,11 @@ TinyGame.StateHandler.prototype.Add = function(name, state, start){
 TinyGame.StateHandler.prototype.Start = function(state){
 	if(!this._BootCompleted){
 		this._PendingActive = state;
-		return;
+		return true;
 	}
 	if(!this._ValidState(state)) {
 		console.error("TinyGame.StateHandler.Start: INVALID STATE '" + state + "'");
-		return;
+		return false;
 	}
 
 	this._SetActive(state);	

@@ -17,6 +17,7 @@ TinyGame.BaseObject = function (x, y) {
     this.Vision = new TinyGame.Vector2d();
 
     //  Variables for Move Methods
+    //  REMOVE: Add Move logic to game engine
     this._Move = {
         _Pending: false,
         _Destination: new TinyGame.Vector2d(),
@@ -31,10 +32,10 @@ TinyGame.BaseObject.prototype._Draw = function (context) { };
 //  TinyGame.BaseObject._Update() <Private>
 //      - Caller: TinyGame.World._Update()
 //      - Notes: Used for the MoveTo method, allows for calling MoveTo() once, 
-//              and still having the object move.
-//              Issues with large speeds, causing the object to 'bounce' back and forth,
-//              near the destination. Need to add some math to check the differences with applied.
-//              However I'm retarded and can't think up a solution yet. Pls fix.
+//                  and still having the object move. Issues with large speeds, 
+//                  causing the object to 'bounce' back and forth,
+//                  near the destination. Need to add some math to check the differences with applied.
+//                  However I'm retarded and can't think up a solution yet. Pls fix.
 TinyGame.BaseObject.prototype._Update = function () {
 
     //  Handles the Move Commands
@@ -50,7 +51,7 @@ TinyGame.BaseObject.prototype._Update = function () {
         //  If not, then resets this._Move vars 
         if (this.Position.X !== this._Move._Destination.X) {
             var destination = this._Move._Destination, speed = this._Move._Speed;
-            console.log(destination);
+            // console.log(destination);
             target.Set(target.Normal().Multiply(speed));
             if ((Math.abs(xDifference) - target.X) < 0) {
                 target.X = 0;
@@ -121,9 +122,9 @@ TinyGame.BaseObject.prototype._BAKMoveTo = function (destination, speed) {
 
     //  Sets target vector to destination
     if (destination instanceof TinyGame.BaseObject) {
-        target.Set(destination.Position)
+        target.Set(destination.Position);
     } else {
-        target.Set(destination[0], destination[1])
+        target.Set(destination[0], destination[1]);
     }
 
     //  Moves the object at specified speed
@@ -144,7 +145,7 @@ TinyGame.BaseObject.prototype._BAKMoveTo = function (destination, speed) {
         if (destination instanceof TinyGame.BaseObject) {
             this.Position.Set(target);
         } else {
-            this.Position.Set(target.X, target.Y)
+            this.Position.Set(target.X, target.Y);
         }
     }
 
@@ -165,7 +166,7 @@ TinyGame.BaseObject.prototype.MoveTo = function (destination, speed) {
     if (!speed) {
         this.Position.Set(target);
     } else {
-        this._Move._Pending = true
+        this._Move._Pending = true;
         this._Move._Destination = target;
         this._Move._Speed = speed;
     }
@@ -201,7 +202,7 @@ TinyGame.ObjectFactory = function (game) {
 //                  like adding collisions to the game world. The other solution I thought of was to create
 //                  an event handler that triggered when the object.addcollision method was called. Still might
 //                  implement that idk. 
-//                  Also applies a unique ID to each object :) woohoo
+//                  Also applies a unique ID to each object
 TinyGame.ObjectFactory.prototype._LinkObject = function (obj) {
 
     //  Binds the Game object; Private use
@@ -268,7 +269,7 @@ TinyGame.Sprite = function (image, x, y, width, height, clip) {
         this._StaticFrame = { X: clip.x, Y: clip.y, Width: clip.width, Height: clip.height };
     }
     this._State = "STATIC";	// Used for animations
-}
+};
 TinyGame.Sprite.prototype = Object.create(TinyGame.BaseObject.prototype);
 TinyGame.Sprite.prototype.Animations = {
     _Animations: [],
