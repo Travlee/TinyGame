@@ -1,6 +1,6 @@
 
-//	#TinyGame.StateHandler
-//		
+//	TinyGame.StateHandler
+//		- Add a pending-state check at the start of each lopp
 TinyGame.StateHandler = function(game, states, default_state){
 	this._Game = game || this;
 	this._Cache = game._Cache;
@@ -47,17 +47,21 @@ TinyGame.StateHandler.prototype._ParseStates = function(states){
 
 //	Added a typeof: 'object' check along with 'function' to allow for custom
 //		props/objects to be added to state::objects in addition to state::methods.
+//	CHANGE: Change the check to see if each property of the state object has an object
+//		that has at least update(or one of: init/preload/etc..) methods and such.
+//		Then only add that object, and skip non-matches.
 TinyGame.StateHandler.prototype._ValidState = function(state){
 	if(this._States[state]) return true;
 
 	for(var obj in state){
 		if(typeof state[obj] === 'function' || typeof state[obj] === 'object'){ 
-			console.log(state[obj]);
+			// console.log(state, state[obj]);
 
 			return true;
 		}
+		// console.info('	OBJECT:', state, 'PROP:', state[obj]);
+		return false;
 	}
-	return false;
 };
 TinyGame.StateHandler.prototype._Update = function(){
 	if(!this.Active.State) return;
@@ -134,7 +138,7 @@ TinyGame.StateHandler.prototype._KillActive = function(){
 
 TinyGame.StateHandler.prototype.Add = function(name, state, start){
 	if(!this._ValidState(state)){
-		console.error('TinyGame.STATEHANDLER.ADD: INVALID STATE OBJECT ', state);
+		console.error('TinyGame.StateHandler.Add: INVALID STATE OBJECT ', name);
 		return;
 	}
 	this._States[name] = new TinyGame.State(state);

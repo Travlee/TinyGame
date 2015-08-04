@@ -33,7 +33,6 @@ test.Main = {
         // block.MoveTo(ninja, 10);
         //blockTwo.MoveTo([700, 200], 8);
 
-
         blockText = this.Add.Text(block.Position.X, block.Position.Y, block.Distance(ninja), '10pt', "blue");
 
         //  still havent implemented working animations - pls fix
