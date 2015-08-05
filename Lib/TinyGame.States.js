@@ -45,21 +45,14 @@ TinyGame.StateHandler.prototype._ParseStates = function(states){
 	}
 };
 
-//	Added a typeof: 'object' check along with 'function' to allow for custom
-//		props/objects to be added to state::objects in addition to state::methods.
-//	CHANGE: Change the check to see if each property of the state object has an object
-//		that has at least update(or one of: init/preload/etc..) methods and such.
-//		Then only add that object, and skip non-matches.
+//	Checks each property of the state_object to verify that each is a function
 TinyGame.StateHandler.prototype._ValidState = function(state){
 	if(this._States[state]) return true;
 
 	for(var obj in state){
-		if(typeof state[obj] === 'function' || typeof state[obj] === 'object'){ 
-			// console.log(state, state[obj]);
-
+		if(typeof state[obj] === 'function'){ 
 			return true;
 		}
-		// console.info('	OBJECT:', state, 'PROP:', state[obj]);
 		return false;
 	}
 };

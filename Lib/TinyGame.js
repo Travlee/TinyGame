@@ -67,7 +67,7 @@ TinyGame.Game = function(width, height, parent_id, states, default_state){
 		var self = this;
 		document.addEventListener('DOMContentLoaded', function(){self._Boot();}, false);		
 	}
-}
+};
 //  TinyGame.game._Boot() - Private
 //      - Caller: EventListener->DOMContentLoaded
 //      - Returns: Not shit
