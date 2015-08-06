@@ -21,11 +21,13 @@ TinyGame.Scene.prototype._Update = function(){
 
 	//	Draw objects
 	for(var i=0, len=this._Game.Objects._Objects.length; i<len; i++){
-		//	Check if object is off-canvas before drawing..
-		// if(){ };
+		var obj = this._Game.Objects._Objects[i];
 
-		this._Game.Objects._Objects[i]._Draw(this.Context);
-	};	
+	//	Check if object is off-canvas before drawing..
+	// if(){ };
+	
+		obj._Draw(this.Context);
+	}
 };
 TinyGame.Scene.prototype._ClearScene = function(){
 	this.Context.fillStyle = this.bgColor;
@@ -35,5 +37,5 @@ TinyGame.Scene.prototype._ClearScene = function(){
 // Add method for sorting objects based on z_index for layering
 
 //  Add a method for drawing the last state to a off-screen canvas when the state changes
-//  then redraw that last-state scene every draw while in the new state?
-//  maybe an option when creating a new state?
+//  	then redraw that last-state scene every draw while in the new state?
+//  	Maybe an option when creating a new state?

@@ -289,8 +289,8 @@ TinyGame.Sprite.prototype._Draw = function (context) {
             context.drawImage(this._Image, this.Position.X, this.Position.Y, this.Width, this.Height);
         }
         else {
-            context.drawImage(this._Image, this._StaticFrame.X, this._StaticFrame.Y, this._StaticFrame.Width, this._StaticFrame.Height,
-                                this.Position.X, this.Position.Y, this.Width, this.Height);
+            context.drawImage(this._Image, this._StaticFrame.X, this._StaticFrame.Y, this._StaticFrame.Width, 
+                                this._StaticFrame.Height, this.Position.X, this.Position.Y, this.Width, this.Height);
         }
     }
     else {
