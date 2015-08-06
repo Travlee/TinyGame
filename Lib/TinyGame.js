@@ -53,6 +53,7 @@ TinyGame.Game = function(width, height, parent_id, states, default_state){
 	this.Add = null;
 	this.Load = null;
 	this.Objects = null;
+	this.Events = null;
 	//this.Rand = null;
 	//this.Input = null; 
 	this.Math = null;
@@ -81,6 +82,7 @@ TinyGame.Game.prototype._Boot = function(){
 	this.Time = new TinyGame.Time();
 	this.Load = new TinyGame.Loader(this);
 	this.Objects = new TinyGame.ObjectsHandler(this);
+	this.Events = new TinyGame.EventHandler(this);
 	this.Math = TinyGame.Math;
 	this.Scene._Boot();
 	this.World = new TinyGame.World(this);

@@ -25,7 +25,6 @@ TinyGame.World.prototype._Update = function(){
 	if (this.EnableBounds) this._BoundsCheck();
 	this.Collisions._Update();
 
-	
 };
 
 //	TinyGame.World._Physics() <Private>
@@ -46,7 +45,7 @@ TinyGame.World.prototype._Physics = function(){
 
 		// Make updates frame-independent at some point idk when but yeah do it
 		obj.Position.Add(obj.Velocity);
-	};
+	}
 };
 //	Bounds checking, obviously...
 //		- ADD RADIUS CHECKS FOR CIRCLES AND JUNK
@@ -61,21 +60,48 @@ TinyGame.World.prototype._BoundsCheck = function(){
 		if(obj.Position.X < 0){
 			obj.Position.X = 0;
 			obj.Velocity.X = 0;
+
+			//	Bounds Event
+			this._Game.Events.Bounds._Update('LEFT', true);
+		} else {
+			//	Bounds Event
+			this._Game.Events.Bounds._Update('LEFT', false);
 		}
 		//	RIGHT BOUNDS...
-		else if(obj.Position.X + obj.Width > this.Bounds[0]){
+		if(obj.Position.X + obj.Width > this.Bounds[0]){
 			obj.Position.X = this.Bounds[0] - obj.Width;
 			obj.Velocity.X = 0;
+
+			// Bounds Event
+			this._Game.Events.Bounds._Update('RIGHT', true);
+		}
+		else {
+			//	Bounds Event
+			this._Game.Events.Bounds._Update('RIGHT', false);
 		}
 		//	TOP BOUNDS...
 		if(obj.Position.Y < 0){
 			obj.Position.Y = 0;
 			obj.Velocity.Y = 0;
+
+			// Bounds Event
+			this._Game.Events.Bounds._Update('TOP', true);
+		}
+		else{
+			//	Bounds Event
+			this._Game.Events.Bounds._Update('TOP', false);
 		}
 		//	BOTTOM BOUNDS...
-		else if(obj.Position.Y + obj.Height > this.Bounds[1]){
+		if(obj.Position.Y + obj.Height > this.Bounds[1]){
 			obj.Position.Y = this.Bounds[1] - obj.Height;			
 			obj.Velocity.Y = 0;
+
+			// Bounds Event
+			this._Game.Events.Bounds._Update('BOTTOM', true);
 		}
-	};
+		else{
+			//	Bounds Event
+			this._Game.Events.Bounds._Update('BOTTOM', false);
+		}
+	}
 };
