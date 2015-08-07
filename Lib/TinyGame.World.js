@@ -3,7 +3,9 @@
 //		- Notes: Handles object physics, bounds checking, collisions and stuff yeah...
 TinyGame.World = function(game){
 	this._Game = game;
-	this.Bounds = [this._Game.Scene.Width, this._Game.Scene.Height];
+	// this.Bounds = {};
+	this.Width = this._Game.Scene.Width;
+	this.Height = this._Game.Scene.Height;
 	this.Collisions = new TinyGame.Collisions(game);
 	this.EnableBounds = false;
 
@@ -35,7 +37,7 @@ TinyGame.World.prototype._Physics = function(){
 	    var obj = this._Game.Objects._Objects[i];
 
 	    //  Call each Object's _Update method
-	    obj._Update();
+	    obj._Update(this._Game);
 
 	    //	Adds Gravity to Velocity each update
 		obj.Velocity.Add(obj.Gravity);
@@ -62,22 +64,22 @@ TinyGame.World.prototype._BoundsCheck = function(){
 			obj.Velocity.X = 0;
 
 			//	Bounds Event
-			this._Game.Events.Bounds._Update('LEFT', true);
+			obj.Events.Bounds._Update('LEFT', true);
 		} else {
 			//	Bounds Event
-			this._Game.Events.Bounds._Update('LEFT', false);
+			obj.Events.Bounds._Update('LEFT', false);
 		}
 		//	RIGHT BOUNDS...
-		if(obj.Position.X + obj.Width > this.Bounds[0]){
-			obj.Position.X = this.Bounds[0] - obj.Width;
+		if(obj.Position.X + obj.Width > this.Width){
+			obj.Position.X = this.Width - obj.Width;
 			obj.Velocity.X = 0;
 
 			// Bounds Event
-			this._Game.Events.Bounds._Update('RIGHT', true);
+			obj.Events.Bounds._Update('RIGHT', true);
 		}
 		else {
 			//	Bounds Event
-			this._Game.Events.Bounds._Update('RIGHT', false);
+			obj.Events.Bounds._Update('RIGHT', false);
 		}
 		//	TOP BOUNDS...
 		if(obj.Position.Y < 0){
@@ -85,23 +87,23 @@ TinyGame.World.prototype._BoundsCheck = function(){
 			obj.Velocity.Y = 0;
 
 			// Bounds Event
-			this._Game.Events.Bounds._Update('TOP', true);
+			obj.Events.Bounds._Update('TOP', true);
 		}
 		else{
 			//	Bounds Event
-			this._Game.Events.Bounds._Update('TOP', false);
+			obj.Events.Bounds._Update('TOP', false);
 		}
 		//	BOTTOM BOUNDS...
-		if(obj.Position.Y + obj.Height > this.Bounds[1]){
-			obj.Position.Y = this.Bounds[1] - obj.Height;			
+		if(obj.Position.Y + obj.Height > this.Height){
+			obj.Position.Y = this.Height - obj.Height;			
 			obj.Velocity.Y = 0;
 
 			// Bounds Event
-			this._Game.Events.Bounds._Update('BOTTOM', true);
+			obj.Events.Bounds._Update('BOTTOM', true);
 		}
 		else{
 			//	Bounds Event
-			this._Game.Events.Bounds._Update('BOTTOM', false);
+			obj.Events.Bounds._Update('BOTTOM', false);
 		}
 	}
 };
