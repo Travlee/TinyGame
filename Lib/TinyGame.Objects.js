@@ -3,7 +3,9 @@
 //  Base Object Class-ish
 //  
 //      Todo:
-//          - [] Add Speed/Accel to baseobject?
+//          - [ ] Add Speed/Accel to baseobject?
+//          - [ ] Add Initialize Method to objects, called by game_engine on 
+//                  instantiation?
 //          
 TinyGame.BaseObject = function (x, y) {
     this._Type = null;
@@ -29,6 +31,8 @@ TinyGame.BaseObject = function (x, y) {
 
     this.zIndex = 0;
 };
+//  Called once on Intantiation
+TinyGame.BaseObject.prototype._Initialize = function(){};
 TinyGame.BaseObject.prototype._Draw = function (context) { };
 
 //  TinyGame.BaseObject._Update() <Private>
