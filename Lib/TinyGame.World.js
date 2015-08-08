@@ -24,7 +24,7 @@ TinyGame.World.prototype._Update = function(){
 
     //  Make an object loop here, then call each method to act on a single object. 
     //  performance things
-	if (this.EnableBounds) this._BoundsCheck();
+	if(this.EnableBounds) this._BoundsCheck();
 	this.Collisions._Update();
 
 };
@@ -40,7 +40,12 @@ TinyGame.World.prototype._Physics = function(){
 	    obj._Update(this._Game);
 
 	    //	Adds Gravity to Velocity each update
-		obj.Velocity.Add(obj.Gravity);
+		if(obj.Speed.X !== 0 || obj.Speed.Y !== 0){
+			obj.Velocity.Add(obj.Gravity);
+		} 
+		else{
+			obj.Velocity.Add(obj.Gravity);			
+		}
 
 		// Probably not needed and stuff
 		// if(obj.Velocity.X === 0 && obj.Velocity.Y === 0) continue;
@@ -64,46 +69,55 @@ TinyGame.World.prototype._BoundsCheck = function(){
 			obj.Velocity.X = 0;
 
 			//	Bounds Event
-			obj.Events.Bounds._Update('LEFT', true);
-		} else {
-			//	Bounds Event
-			obj.Events.Bounds._Update('LEFT', false);
+			if(!obj.Events.Bounds.Left) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.LEFT, true);
+		} 
+		else if(obj.Events.Bounds.Left){
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.LEFT, false);				
 		}
+
 		//	RIGHT BOUNDS...
 		if(obj.Position.X + obj.Width > this.Width){
 			obj.Position.X = this.Width - obj.Width;
 			obj.Velocity.X = 0;
 
 			// Bounds Event
-			obj.Events.Bounds._Update('RIGHT', true);
+			if(!obj.Events.Bounds.Right) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.RIGHT, true);
 		}
-		else {
-			//	Bounds Event
-			obj.Events.Bounds._Update('RIGHT', false);
+		else if(obj.Events.Bounds.Right){
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.RIGHT, false);
 		}
+
 		//	TOP BOUNDS...
 		if(obj.Position.Y < 0){
 			obj.Position.Y = 0;
 			obj.Velocity.Y = 0;
 
 			// Bounds Event
-			obj.Events.Bounds._Update('TOP', true);
+			if(!obj.Events.Bounds.Top) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.TOP, true);
 		}
-		else{
-			//	Bounds Event
-			obj.Events.Bounds._Update('TOP', false);
+		else if(obj.Events.Bounds.Top){
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.TOP, false);
 		}
+
 		//	BOTTOM BOUNDS...
 		if(obj.Position.Y + obj.Height > this.Height){
 			obj.Position.Y = this.Height - obj.Height;			
 			obj.Velocity.Y = 0;
 
 			// Bounds Event
-			obj.Events.Bounds._Update('BOTTOM', true);
+			if(!obj.Events.Bounds.Bottom) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.BOTTOM, true);
 		}
-		else{
-			//	Bounds Event
-			obj.Events.Bounds._Update('BOTTOM', false);
+		else if(obj.Events.Bounds.Bottom){
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.BOTTOM, false);
+		}
+
+		//	NONE Bounds
+		if(!obj.Events.Bounds.Left && !obj.Events.Bounds.Right &&
+			!obj.Events.Bounds.Top && !obj.Events.Bounds.Bottom){
+			if(!obj.Events.Bounds.None) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.NONE, true);
+		}
+		else if(obj.Events.Bounds.None){
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.NONE, false);
 		}
 	}
 };

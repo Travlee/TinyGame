@@ -2,17 +2,15 @@
 //	TinyGame Framework
 //		-Requires TinyCanvas Library
 //		-by Lee
-//	HELP STUFF
-//		- If there's an underscore in a variable/method's name, you probably dont need to fuck with it.
+//		
+//		Todo:
+//			- [ ] Reduce the number of Events._Trigger calls from World._BoundsCheck
 
 (function(){
 	if(window.requestAnimationFrame === 'undefined'){
 		alert("Game Loop Issues Because I'm Lazy.");
 		console.error("Game loop issues because I'm lazy.");
 	}
-	/*if(){
-
-	}*/
 })();
 
 var TinyGame = {
@@ -53,6 +51,7 @@ TinyGame.Game = function(width, height, parent_id, states, default_state){
 	this.Add = null;
 	this.Load = null;
 	this.Objects = null;
+	this.Events = null;
 	//this.Rand = null;
 	//this.Input = null; 
 	this.Math = null;
@@ -81,6 +80,7 @@ TinyGame.Game.prototype._Boot = function(){
 	this.Time = new TinyGame.Time();
 	this.Load = new TinyGame.Loader(this);
 	this.Objects = new TinyGame.ObjectsHandler(this);
+	this.Events = new TinyGame.EventHandler(this);
 	this.Math = TinyGame.Math;
 	this.Scene._Boot();
 	this.World = new TinyGame.World(this);

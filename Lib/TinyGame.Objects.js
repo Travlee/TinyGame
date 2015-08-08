@@ -11,11 +11,11 @@ TinyGame.BaseObject = function (x, y) {
     this._Type = null;
     this._ID = 0;
     this.Position = new TinyGame.Vector2d(x || 0, y || 0);
-    // this.Speed = new TinyGame.Vector2d(0, 0);
-    // this.Accel = new TinyGame.Vector2d(0, 0);
+    this.Speed = new TinyGame.Vector2d(0, 0);
+    this.Acceleration = new TinyGame.Vector2d(0, 0);
     this.Velocity = new TinyGame.Vector2d(0, 0);
     this.Gravity = new TinyGame.Vector2d(0, 0);
-    this.Events = new TinyGame.EventHandler();
+    this.Events = new TinyGame.ObjectEvents();
 
     //  Vision vector for line-of-sight checks; Not used yet
     this.Vision = new TinyGame.Vector2d();
