@@ -39,11 +39,50 @@ TinyGame.World.prototype._Physics = function(){
 	    //  Call each Object's _Update method
 	    obj._Update(this._Game);
 
-	    //	Adds Gravity to Velocity each update
-		if(obj.Speed.X !== 0 || obj.Speed.Y !== 0){
-			obj.Velocity.Add(obj.Gravity);
-		} 
-		else{
+	    //	If Speed & Accerlation props aren't 0
+		if(obj.Speed.NotZero() && obj.Acceleration.NotZero()){
+			
+			//	If Accleration.X is Positive
+			if(obj.Acceleration.X >= 0){
+				if(obj.Velocity.X + obj.Acceleration.X < obj.Speed.X){
+					obj.Velocity.X += obj.Acceleration.X;
+				}
+				else{
+					obj.Velocity.X = obj.Speed.X;
+				}
+			}
+			else {
+				if(Math.abs(obj.Velocity.X - obj.Acceleration.X) <= obj.Speed.X){
+					obj.Velocity.X += obj.Acceleration.X;
+				}
+				else {
+					obj.Velocity.X = -obj.Speed.X;
+				}
+			}
+
+			//	If Acceleration.Y is Positive
+			if(obj.Acceleration.Y >= 0){
+				if(obj.Velocity.Y + obj.Acceleration.Y < obj.Speed.Y){
+					obj.Velocity.Y += obj.Acceleration.Y;
+				}
+				else{
+					obj.Velocity.Y = obj.Speed.Y;
+				}
+			}
+			else {
+				if(Math.abs(obj.Velocity.Y - obj.Acceleration.Y) <= obj.Speed.Y){
+					obj.Velocity.Y += obj.Acceleration.Y;
+					// console.log('hi');
+				}
+				else {
+					obj.Velocity.Y = -obj.Speed.Y;
+				}
+			}
+			
+		}
+
+		//	If Speed/Acceleration not Set
+		else {
 			obj.Velocity.Add(obj.Gravity);			
 		}
 

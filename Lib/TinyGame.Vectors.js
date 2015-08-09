@@ -2,11 +2,6 @@ TinyGame.Vector2d = function(x, y){
 	this.X = x || 0;
 	this.Y = y || 0;
 };
-/**
- * [Set description]
- * @param {[type]} x [description]
- * @param {[type]} y [description]
- */
 TinyGame.Vector2d.prototype.Set = function (x, y) {
     if (x instanceof TinyGame.Vector2d) {
         this.X = x.X;
@@ -65,4 +60,10 @@ TinyGame.Vector2d.prototype.Length = function(){
 TinyGame.Vector2d.prototype.Zero = function () {
     this.X = 0;
     this.Y = 0;
-}
+};
+TinyGame.Vector2d.prototype.NotZero = function () {
+    if(this.X !== 0 && this.Y !== 0){
+        return true;
+    }
+    return false;
+};

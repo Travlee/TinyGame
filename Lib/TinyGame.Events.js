@@ -20,16 +20,15 @@ TinyGame.EventHandler = function(game){
 TinyGame.EventHandler.prototype._Trigger = {
     _Bounds: function(obj, type, state){
 
-        //  Events.Bind on Bounds.ALL
-        if(obj.Events._Binds._Bounds._All && state === true) obj.Events._Binds._Bounds._All();
-
-        //  Events.Bind on Bounds.None
-        if(obj.Events._Binds._Bounds._None && state === true){
-            obj.Events._Binds._Bounds._None();
-        }
         switch(type){
             case TinyGame.TYPES.NONE:
                 obj.Events.Bounds.None = state;
+                if(obj.Events.Bounds.None === true){
+                    if(obj.Events._Binds._Bounds._None) obj.Events._Binds._Bounds._None();
+                }
+                else {
+                    if(obj.Events._Binds._Bounds._Any) obj.Events._Binds._Bounds._Any();
+                }
                 break;
             case TinyGame.TYPES.BOUNDS.LEFT:
                 obj.Events.Bounds.Left = state;
@@ -52,8 +51,8 @@ TinyGame.EventHandler.prototype.Bind = function(obj, type, callback){
         return false;
     }
     switch(type){
-        case TinyGame.TYPES.ALL:
-            obj.Events._Binds._Bounds._All = callback.bind(obj);
+        case TinyGame.TYPES.ANY:
+            obj.Events._Binds._Bounds._Any = callback.bind(obj);
             break;
         case TinyGame.TYPES.NONE:
             obj.Events._Binds._Bounds._None = callback.bind(obj);
@@ -66,8 +65,8 @@ TinyGame.EventHandler.prototype.RemoveBind = function(obj, type){
         return false;
     }
     switch(type){
-        case TinyGame.TYPES.ALL:
-            obj.Events._Binds._Bounds._All = null;
+        case TinyGame.TYPES.ANY:
+            obj.Events._Binds._Bounds._Any = null;
             break;
     }
 };
@@ -80,7 +79,7 @@ TinyGame.ObjectEvents = function(){
             _Right: null,
             _Top: null,
             _Bottom: null,
-            _All: null
+            _Any: null
         }
     };
     this.Bounds = {

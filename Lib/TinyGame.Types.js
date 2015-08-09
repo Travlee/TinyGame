@@ -2,11 +2,12 @@ TinyGame.TYPES = {
     
     NONE: 0,
     ALL: 1,
+    ANY: 2,
 
     BOUNDS: {
-        LEFT: 2,
-        RIGHT: 3,
-        TOP: 4,
-        BOTTOM: 5,
+        LEFT: 3,
+        RIGHT: 4,
+        TOP: 5,
+        BOTTOM: 6
     }
 };
