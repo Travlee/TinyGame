@@ -4,11 +4,10 @@ TinyGame.Input = function(game){
 	this.keysDown = [];
 
 	this.Get = function(key){
-		if(this.keysDown[key] != undefined)
-		{
+		if(this.keysDown[key] !== undefined){
 			return true;
 		}
-		return false
+		return false;
 	};
 	this.Remove = function(key){
 		delete self.keysDown[key];
