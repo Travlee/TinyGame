@@ -97,6 +97,7 @@ TinyGame.Game.prototype._Run = function(time){
 	this.States._Update();
 	this.Scene._Update();
 	this.World._Update();
+	this.Events._Update();
 	
 
 	//	Debug Stuffs
