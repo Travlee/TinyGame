@@ -108,10 +108,10 @@ TinyGame.World.prototype._BoundsCheck = function(){
 			obj.Velocity.X = 0;
 
 			//	Bounds Event
-			if(!obj.Events.Bounds.Left) this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.LEFT, true);
+			if(!obj.Events.Bounds.Left) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.LEFT, true);
 		} 
 		else if(obj.Events.Bounds.Left){
-			this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.LEFT, false);				
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.LEFT, false);				
 		}
 
 		//	RIGHT BOUNDS...
@@ -120,10 +120,10 @@ TinyGame.World.prototype._BoundsCheck = function(){
 			obj.Velocity.X = 0;
 
 			// Bounds Event
-			if(!obj.Events.Bounds.Right) this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.RIGHT, true);
+			if(!obj.Events.Bounds.Right) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.RIGHT, true);
 		}
 		else if(obj.Events.Bounds.Right){
-			this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.RIGHT, false);
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.RIGHT, false);
 		}
 
 		//	TOP BOUNDS...
@@ -132,10 +132,10 @@ TinyGame.World.prototype._BoundsCheck = function(){
 			obj.Velocity.Y = 0;
 
 			// Bounds Event
-			if(!obj.Events.Bounds.Top) this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.TOP, true);
+			if(!obj.Events.Bounds.Top) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.TOP, true);
 		}
 		else if(obj.Events.Bounds.Top){
-			this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.TOP, false);
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.TOP, false);
 		}
 
 		//	BOTTOM BOUNDS...
@@ -144,19 +144,19 @@ TinyGame.World.prototype._BoundsCheck = function(){
 			obj.Velocity.Y = 0;
 
 			// Bounds Event
-			if(!obj.Events.Bounds.Bottom) this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.BOTTOM, true);
+			if(!obj.Events.Bounds.Bottom) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.BOTTOM, true);
 		}
 		else if(obj.Events.Bounds.Bottom){
-			this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.BOTTOM, false);
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.BOUNDS.BOTTOM, false);
 		}
 
 		//	NONE Bounds
 		if(!obj.Events.Bounds.Left && !obj.Events.Bounds.Right &&
 			!obj.Events.Bounds.Top && !obj.Events.Bounds.Bottom){
-			if(!obj.Events.Bounds.None) this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.NONE, true);
+			if(!obj.Events.Bounds.None) this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.NONE, true);
 		}
 		else if(obj.Events.Bounds.None){
-			this._Game.Events.Bounds._Trigger(obj, TinyGame.TYPES.BOUNDS.NONE, false);
+			this._Game.Events._Trigger._Bounds(obj, TinyGame.TYPES.NONE, false);
 		}
 	}
 };
