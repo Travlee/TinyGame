@@ -4,8 +4,8 @@
 //		-by Lee
 //		
 //		Todo:
-//			- [ ] Reduce the number of Events._Trigger calls from World._BoundsCheck
-
+// 			- [ ]
+// 			
 (function(){
 	if(window.requestAnimationFrame === 'undefined'){
 		alert("Game Loop Issues Because I'm Lazy.");
@@ -17,7 +17,7 @@ var TinyGame = {
 	Version: 0
 };
 //	#TinyGame(width, height, parent_id, states, default_state)
-//		-width {INTEGER, REQUIRED}: 
+//		-width <int> REQUIRED}: 
 //			canvas width
 //		-height {INTEGER, REQUIRED}: 
 //			canvas height
