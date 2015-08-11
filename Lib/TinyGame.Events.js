@@ -168,12 +168,6 @@ TinyGame.BoundsEventHandler.prototype.Bind = function(type, callback, obj){
 TinyGame.InputEventHandler = function(game){
     this._Game = game;
 
-    this._Binds = {
-        _Keys: [],
-        _Mouse: []
-
-    };
-
 };
 TinyGame.InputEventHandler.prototype._Update = function(){};
 TinyGame.InputEventHandler.prototype._Trigger = function(type, state){
@@ -187,11 +181,6 @@ TinyGame.InputEventHandler.prototype.Bind = function(type, callback, context){
 
     switch(type){
         case TinyGame.TYPES.INPUT.KEY_DOWN:
-            // if(context){
-            //     callback = callback.bind(context);
-            // }
-            // this._Binds._Keys.push(callback);
-            // break;
 
             if(context){
                 callback = callback.bind(context);
@@ -203,7 +192,7 @@ TinyGame.InputEventHandler.prototype.Bind = function(type, callback, context){
             if(context){
                 callback = callback.bind(context);
             }
-            this._Binds._Mouse.push(callback);
+            
             break;
     }
 };

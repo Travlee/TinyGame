@@ -53,7 +53,6 @@ TinyGame.Game = function(width, height, parent_id, states, default_state){
 	this.Objects = null;
 	this.Events = null;
 	//this.Rand = null;
-	//this.Input = null; 
 	this.Math = null;
 	this.Scene = new TinyGame.Scene(this, width, height, parent_id, 'white');
 	this.States = new TinyGame.StateHandler(this, states || null, default_state || null);

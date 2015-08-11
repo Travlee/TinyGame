@@ -61,8 +61,8 @@ TinyGame.Vector2d.prototype.Zero = function () {
     this.X = 0;
     this.Y = 0;
 };
-TinyGame.Vector2d.prototype.NotZero = function () {
-    if(this.X !== 0 && this.Y !== 0){
+TinyGame.Vector2d.prototype.isZero = function () {
+    if(this.X === 0 && this.Y === 0){
         return true;
     }
     return false;

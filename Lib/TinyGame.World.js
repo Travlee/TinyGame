@@ -36,12 +36,18 @@ TinyGame.World.prototype._Physics = function(){
 	for(var i=0, len=this._Game.Objects._Objects.length; i<len; i++){
 	    var obj = this._Game.Objects._Objects[i];
 
-	    //  Call each Object's _Update method
-	    obj._Update(this._Game);
+    	//  Call each Object's _Update method
+        obj._Update(this._Game);
+
+		// Skips Objects with no Velocity or Acceleration
+		if(obj.Velocity.isZero() && obj.Acceleration.isZero() && obj.Gravity.isZero()) continue;
+
 
 	    //	If Speed & Accerlation props aren't 0
-		if(obj.Speed.NotZero() && obj.Acceleration.NotZero()){
-			
+	    //	Remove Speed as a requirement for Acceleration Work
+		if(!obj.Speed.isZero() && !obj.Acceleration.isZero()){
+
+
 			//	If Accleration.X is Positive
 			if(obj.Acceleration.X >= 0){
 				if(obj.Velocity.X + obj.Acceleration.X < obj.Speed.X){
@@ -52,7 +58,7 @@ TinyGame.World.prototype._Physics = function(){
 				}
 			}
 			else {
-				if(Math.abs(obj.Velocity.X - obj.Acceleration.X) <= obj.Speed.X){
+				if(obj.Velocity.X - obj.Acceleration.X <= -obj.Speed.X){
 					obj.Velocity.X += obj.Acceleration.X;
 				}
 				else {
@@ -60,7 +66,7 @@ TinyGame.World.prototype._Physics = function(){
 				}
 			}
 
-			//	If Acceleration.Y is Positive
+			// If Acceleration.Y is Positive
 			if(obj.Acceleration.Y >= 0){
 				if(obj.Velocity.Y + obj.Acceleration.Y < obj.Speed.Y){
 					obj.Velocity.Y += obj.Acceleration.Y;
@@ -70,7 +76,7 @@ TinyGame.World.prototype._Physics = function(){
 				}
 			}
 			else {
-				if(Math.abs(obj.Velocity.Y - obj.Acceleration.Y) <= obj.Speed.Y){
+				if(obj.Velocity.Y - obj.Acceleration.Y >= -obj.Speed.Y){
 					obj.Velocity.Y += obj.Acceleration.Y;
 					// console.log('hi');
 				}
@@ -81,13 +87,8 @@ TinyGame.World.prototype._Physics = function(){
 			
 		}
 
-		//	If Speed/Acceleration not Set
-		else {
-			obj.Velocity.Add(obj.Gravity);			
-		}
-
-		// Probably not needed and stuff
-		// if(obj.Velocity.X === 0 && obj.Velocity.Y === 0) continue;
+		//	Add Gravity to Velocity 
+		obj.Velocity.Add(obj.Gravity);
 
 		// Make updates frame-independent at some point idk when but yeah do it
 		obj.Position.Add(obj.Velocity);
