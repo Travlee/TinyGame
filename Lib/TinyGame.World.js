@@ -10,7 +10,7 @@ TinyGame.World = function(game){
 	this.EnableBounds = false;
 
     // MoveTo Object Queue - [Inactive]
-	this._MoveQueue = [];
+	// this._MoveQueue = []; remove
 
 };
 //  TinyGame.World._Update() <Private>
